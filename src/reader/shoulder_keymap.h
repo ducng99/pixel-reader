@@ -2,6 +2,7 @@
 #define SHOULDER_KEYMAP_H_
 
 #include <string>
+#include <cstdint>
 #include <SDL/SDL_keysym.h>
 
 std::string get_valid_shoulder_keymap(const std::string &keymap);

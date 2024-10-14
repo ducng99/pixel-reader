@@ -3,6 +3,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 // Convert all whitespace chars to space and limit consecutive whitespace to 1 char length
 std::string compact_whitespace(const char *str);

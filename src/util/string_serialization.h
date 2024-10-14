@@ -4,6 +4,7 @@
 #include <optional>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 std::optional<uint32_t> try_decode_uint(const std::string &str);
 

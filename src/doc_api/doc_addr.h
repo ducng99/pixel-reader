@@ -2,6 +2,7 @@
 #define DOC_ADDR_H_
 
 #include <string>
+#include <cstdint>
 
 using DocAddr = uint64_t;
 

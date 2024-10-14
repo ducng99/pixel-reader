@@ -14,6 +14,7 @@
 #include "util/sdl_utils.h"
 
 #include <filesystem>
+#include <algorithm>
 
 SettingsView::SettingsView(
     SystemStyling &sys_styling,

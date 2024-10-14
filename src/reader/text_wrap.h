@@ -4,6 +4,7 @@
 #include <functional>
 #include <string>
 #include <vector>
+#include <cstdint>
 
 void wrap_lines(
     const char *str,
