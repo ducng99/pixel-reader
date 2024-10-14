@@ -7,26 +7,20 @@ PREFIX ?= /usr
 
 WARNFLAGS := -pedantic-errors -Wall -Wextra
 CXXFLAGS := -std=c++17 -O2
-LDFLAGS  := -lstdc++ -lSDL -lSDL_ttf -lSDL_image -lzip -lxml2 -lstdc++fs
+LDFLAGS  := -lstdc++ -lSDL -lzip -lxml2 -lstdc++fs
 
-ifeq ($(PLATFORM),miyoomini)
-CXXFLAGS := $(CXXFLAGS) \
-	    -DPLATFORM_MIYOO_MINI=1 \
-	    -marm -mtune=cortex-a7 -mfpu=neon-vfpv4 -mfloat-abi=hard -march=armv7ve+simd \
-	    -Icross-compile/miyoo-mini/include/libxml2 \
-	    -Icross-compile/miyoo-mini/include \
-	    -Wno-psabi  # silence "parameter passing for argument of type '...' changed in GCC 7.1" warnings
-LDFLAGS := $(LDFLAGS) \
-	-Lcross-compile/miyoo-mini/lib \
-	-L$(PREFIX)/lib \
-	-Wl,-rpath-link,cross-compile/miyoo-mini/lib
-endif
-
-CXX      := $(CROSS_COMPILE)c++
 BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)
-INCLUDE  := -Isrc -I${SYSROOT}${PREFIX}/include/libxml2
+INCLUDE  := -Isrc
+
+ifeq ($(PLATFORM),rocknix)
+  CXXFLAGS := $(CXXFLAGS) -lSDL2_ttf -lSDL2_image
+  INCLUDE := $(INCLUDE) -I$(PREFIX)/include/ -I$(PREFIX)/include/libxml2/
+else
+  CXXFLAGS := $(CXXFLAGS) -lSDL_ttf -lSDL_image
+  INCLUDE := $(INCLUDE) -I$(SYSROOT)$(PREFIX)/include/libxml2
+endif
 
 ROTOZOOM_SRC := src/extern/rotozoom/SDL_rotozoom.c
 COMMON_SRC   := $(filter-out src/reader/main.cpp, $(wildcard src/filetypes/*.cpp src/filetypes/txt/*.cpp src/filetypes/epub/*.cpp src/reader/*.cpp src/reader/views/*.cpp src/reader/views/token_view/*.cpp src/sys/*.cpp src/util/*.cpp src/doc_api/*.cpp src/extern/hash-library/*.cpp))
@@ -72,13 +66,10 @@ $(APP_DIR)/$(APP_TEST_TARGET): $(TEST_OBJECTS)
 
 -include $(DEPENDENCIES)
 
-.PHONY: all build clean debug release run_tests miyoo-mini-shell
+.PHONY: all build clean debug release run_tests
 
 test: $(APP_DIR)/$(APP_TEST_TARGET)
 	$(APP_DIR)/$(APP_TEST_TARGET)
-
-miyoo-mini-shell:
-	-$(MAKE) -C cross-compile/miyoo-mini/union-miyoomini-toolchain shell WORKSPACE_DIR=$(shell pwd)
 
 build:
 	@mkdir -p $(APP_DIR)
