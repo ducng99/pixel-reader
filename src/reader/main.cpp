@@ -22,7 +22,7 @@
 #include "util/timer.h"
 
 #include <libxml/parser.h>
-#include <SDL/SDL.h>
+#include <SDL2/SDL.h>
 
 #include <csignal>
 #include <iostream>
@@ -94,60 +94,31 @@ void initialize_views(
 
 class SystemKeyChordTracker
 {
-    bool _menu_held = false;
     bool _select_held = false;
-
-    bool _exit_on_menu_release = false;
-    bool _exit_requested = false;
 
 public:
 
     // Report keypress event. Return filtered key code.
-    SDLKey on_keypress(SDLKey key)
+    SDL_Scancode on_keypress(SDL_Scancode key)
     {
         // Block any other keys while special key is held
-        SDLKey filtered_key = (_menu_held || _select_held) ? SDLK_UNKNOWN : key;
+        SDL_Scancode filtered_key = (_select_held) ? SDL_SCANCODE_UNKNOWN : key;
 
         if (key == SW_BTN_SELECT)
         {
             _select_held = true;
         }
 
-        if (key == SW_BTN_MENU)
-        {
-            _menu_held = true;
-            _exit_on_menu_release = true;
-        }
-        else
-        {
-            // Cancel app exit if a menu chord was used (e.g. change brightness)
-            _exit_on_menu_release = false;
-        }
-
         return filtered_key;
     }
 
     // Report keyrelease event.
-    void on_keyrelease(SDLKey key)
+    void on_keyrelease(SDL_Scancode key)
     {
-        if (key == SW_BTN_MENU)
-        {
-            _menu_held = false;
-
-            if (_exit_on_menu_release)
-            {
-                _exit_requested = true;
-            }
-        }
-        else if (key == SW_BTN_SELECT)
+        if (key == SW_BTN_SELECT)
         {
             _select_held = false;
         }
-    }
-
-    bool exit_requested() const
-    {
-        return _exit_requested;
     }
 };
 
@@ -192,14 +163,24 @@ int main(int argc, char **argv)
     SDL_Init(SDL_INIT_VIDEO);
     SDL_ShowCursor(SDL_DISABLE);
     TTF_Init();
+    atexit(SDL_Quit);
+    
+    std::cout << "SDL initialized" << std::endl;
 
     // Surfaces
-    SDL_Surface *video = SDL_SetVideoMode(SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_HWSURFACE);
-    SDL_Surface *screen = SDL_CreateRGBSurface(SDL_HWSURFACE, SCREEN_WIDTH, SCREEN_HEIGHT, 32, 0, 0, 0, 0);
+    SDL_Window *sdlWindow;
+    SDL_Renderer *sdlRenderer;
+    SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &sdlWindow, &sdlRenderer);
+    SDL_Surface *screen = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+    auto sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
     set_render_surface_format(screen->format);
+    
+    std::cout << "SDL screen set up" << std::endl;
 
     auto config = load_config_with_defaults();
     StateStore state_store(config[CONFIG_KEY_STORE_PATH]);
+    
+    std::cout << "Loaded configs" << std::endl;
 
     // Preload & check fonts
     auto init_font_name = get_valid_font_name(settings_get_font_name(state_store).value_or(DEFAULT_FONT_NAME));
@@ -212,6 +193,8 @@ int main(int argc, char **argv)
         std::cerr << "Failed to load one or more fonts" << std::endl;
         return 1;
     }
+    
+    std::cout << "Loaded fonts" << std::endl;
 
     // System styling
     SystemStyling sys_styling(
@@ -227,6 +210,8 @@ int main(int argc, char **argv)
         settings_set_font_size(state_store, sys_styling.get_font_size());
         settings_set_shoulder_keymap(state_store, sys_styling.get_shoulder_keymap());
     });
+    
+    std::cout << "System stylings" << std::endl;
 
     // Text Styling
     TokenViewStyling token_view_styling(
@@ -238,6 +223,8 @@ int main(int argc, char **argv)
         settings_set_show_title_bar(state_store, token_view_styling.get_show_title_bar());
         settings_set_progress_reporting(state_store, token_view_styling.get_progress_reporting());
     });
+    
+    std::cout << "Text stylings" << std::endl;
 
     // Setup views
     TaskQueue task_queue;
@@ -261,6 +248,8 @@ int main(int argc, char **argv)
         token_view_styling,
         SYSTEM_FONT
     );
+    
+    std::cout << "Set up views" << std::endl;
 
     // Track held keys
     HeldKeyTracker held_key_tracker(
@@ -277,19 +266,25 @@ int main(int argc, char **argv)
     );
     SystemKeyChordTracker chord_tracker;
 
-    auto key_held_callback = [&view_stack](SDLKey key, uint32_t held_ms) {
+    auto key_held_callback = [&view_stack](SDL_Scancode key, uint32_t held_ms) {
         view_stack.on_keyheld(key, held_ms);
     };
+    
+    std::cout << "Track held keys" << std::endl;
 
     // Timing
     Timer idle_timer;
     FPSLimiter limit_fps(TARGET_FPS);
     const uint32_t avg_loop_time = 1000 / TARGET_FPS;
+    
+    std::cout << "Timing ran" << std::endl;
 
     // Initial render
-    view_stack.render(screen, true);
-    SDL_BlitSurface(screen, NULL, video, NULL);
-    SDL_Flip(video);
+    SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
+    SDL_RenderClear(sdlRenderer);
+    SDL_RenderPresent(sdlRenderer);
+    
+    std::cout << "Initial render" << std::endl;
 
     while (!quit)
     {
@@ -307,7 +302,7 @@ int main(int argc, char **argv)
                     {
                         idle_timer.reset();
 
-                        SDLKey key = chord_tracker.on_keypress(event.key.keysym.sym);
+                        SDL_Scancode key = chord_tracker.on_keypress(event.key.keysym.scancode);
 
                         if (key == SW_BTN_POWER)
                         {
@@ -336,7 +331,7 @@ int main(int argc, char **argv)
                     break;
                 case SDL_KEYUP:
                     {
-                        SDLKey key = event.key.keysym.sym;
+                        SDL_Scancode key = event.key.keysym.scancode;
                         chord_tracker.on_keyrelease(key);
                     }
                     break;
@@ -344,8 +339,6 @@ int main(int argc, char **argv)
                     break;
             }
         }
-
-        quit = quit || chord_tracker.exit_requested();
 
         held_key_tracker.accumulate(avg_loop_time); // Pretend perfect loop timing for event firing consistency
         ran_user_code = held_key_tracker.for_longest_held(key_held_callback) || ran_user_code;
@@ -361,8 +354,10 @@ int main(int argc, char **argv)
 
             if (view_stack.render(screen, force_render))
             {
-                SDL_BlitSurface(screen, NULL, video, NULL);
-                SDL_Flip(video);
+                SDL_UpdateTexture(sdlTexture, NULL, screen->pixels, screen->pitch);
+                SDL_RenderClear(sdlRenderer);
+                SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
+                SDL_RenderPresent(sdlRenderer);
             }
         }
 
@@ -384,7 +379,8 @@ int main(int argc, char **argv)
     state_store.flush();
 
     SDL_FreeSurface(screen);
-    SDL_Quit();
+    SDL_DestroyTexture(sdlTexture);
+    SDL_DestroyWindow(sdlWindow);
     xmlCleanupParser();
     
     return 0;

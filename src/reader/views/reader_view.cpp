@@ -99,7 +99,7 @@ void open_toc_menu(ReaderView &reader_view, ReaderViewState &state)
         toc_select_menu->set_cursor_pos(current_toc_index);
     }
 
-    toc_select_menu->set_default_on_keypress([](SDLKey key, SelectionMenu &toc) {
+    toc_select_menu->set_default_on_keypress([](SDL_Scancode key, SelectionMenu &toc) {
         if (key == SW_BTN_SELECT)
         {
             toc.close();
@@ -182,7 +182,7 @@ bool ReaderView::is_done()
     return state->is_done;
 }
 
-void ReaderView::on_keypress(SDLKey key)
+void ReaderView::on_keypress(SDL_Scancode key)
 {
     if (key == SW_BTN_B)
     {
@@ -205,7 +205,7 @@ void ReaderView::on_keypress(SDLKey key)
     }
 }
 
-void ReaderView::on_keyheld(SDLKey key, uint32_t hold_time_ms)
+void ReaderView::on_keyheld(SDL_Scancode key, uint32_t hold_time_ms)
 {
     state->token_view->on_keyheld(key, hold_time_ms);
 }

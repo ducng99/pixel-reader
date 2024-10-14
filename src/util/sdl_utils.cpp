@@ -1,7 +1,7 @@
 #include "./sdl_utils.h"
 #include "./sdl_font_cache.h"
 
-#include <SDL/SDL_image.h>
+#include <SDL2/SDL_image.h>
 #include <iostream>
 
 int detect_line_height(TTF_Font *font)

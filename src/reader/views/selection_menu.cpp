@@ -67,7 +67,7 @@ void SelectionMenu::set_on_focus(std::function<void(uint32_t)> callback)
     on_focus = callback;
 }
 
-void SelectionMenu::set_default_on_keypress(std::function<void(SDLKey, SelectionMenu &)> callback)
+void SelectionMenu::set_default_on_keypress(std::function<void(SDL_Scancode, SelectionMenu &)> callback)
 {
     default_on_keypress = callback;
 }
@@ -247,7 +247,7 @@ void SelectionMenu::on_select_entry()
     }
 }
 
-void SelectionMenu::on_keypress(SDLKey key)
+void SelectionMenu::on_keypress(SDL_Scancode key)
 {
     switch (key) {
         case SW_BTN_UP:
@@ -301,7 +301,7 @@ void SelectionMenu::on_keypress(SDLKey key)
     }
 }
 
-void SelectionMenu::on_keyheld(SDLKey key, uint32_t held_time_ms)
+void SelectionMenu::on_keyheld(SDL_Scancode key, uint32_t held_time_ms)
 {
     switch (key) {
         case SW_BTN_UP:

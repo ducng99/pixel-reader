@@ -1,8 +1,8 @@
 #ifndef VIEW_H_
 #define VIEW_H_
 
-#include <SDL/SDL_keysym.h>
-#include <SDL/SDL_video.h>
+#include <SDL2/SDL_scancode.h>
+#include <SDL2/SDL_video.h>
 
 class View
 {
@@ -17,10 +17,10 @@ public:
     virtual bool is_modal() { return false; }
 
     // Key down event.
-    virtual void on_keypress(SDLKey key) = 0;
+    virtual void on_keypress(SDL_Scancode key) = 0;
 
     // Pass key and held time in ms.
-    virtual void on_keyheld(SDLKey, uint32_t) {}
+    virtual void on_keyheld(SDL_Scancode, uint32_t) {}
 
     // This view has been popped from the stack (now defunct).
     virtual void on_pop() {}

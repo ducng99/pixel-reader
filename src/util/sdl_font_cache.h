@@ -1,7 +1,7 @@
 #ifndef SDL_FONT_CACHE_H_
 #define SDL_FONT_CACHE_H_
 
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <string>
 
 enum class FontLoadErrorOpt

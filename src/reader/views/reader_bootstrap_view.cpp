@@ -122,6 +122,6 @@ bool ReaderBootstrapView::is_done()
     return state->is_done;
 }
 
-void ReaderBootstrapView::on_keypress(SDLKey)
+void ReaderBootstrapView::on_keypress(SDL_Scancode)
 {
 }

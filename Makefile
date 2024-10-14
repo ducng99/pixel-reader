@@ -7,7 +7,7 @@ PREFIX ?= /usr
 
 WARNFLAGS := -pedantic-errors -Wall -Wextra
 CXXFLAGS := -std=c++17 -O2
-LDFLAGS  := -lstdc++ -lSDL -lzip -lxml2 -lstdc++fs
+LDFLAGS  := -lstdc++ -lSDL2 -lSDL2_ttf -lSDL2_image -lzip -lxml2 -lstdc++fs
 
 BUILD    := ./build
 OBJ_DIR  := $(BUILD)/objects
@@ -15,14 +15,12 @@ APP_DIR  := $(BUILD)
 INCLUDE  := -Isrc
 
 ifeq ($(PLATFORM),rocknix)
-  CXXFLAGS := $(CXXFLAGS) -lSDL2_ttf -lSDL2_image
   INCLUDE := $(INCLUDE) -I$(PREFIX)/include/ -I$(PREFIX)/include/libxml2/
 else
-  CXXFLAGS := $(CXXFLAGS) -lSDL_ttf -lSDL_image
   INCLUDE := $(INCLUDE) -I$(SYSROOT)$(PREFIX)/include/libxml2
 endif
 
-ROTOZOOM_SRC := src/extern/rotozoom/SDL_rotozoom.c
+ROTOZOOM_SRC := src/extern/rotozoom/SDL2_rotozoom.c
 COMMON_SRC   := $(filter-out src/reader/main.cpp, $(wildcard src/filetypes/*.cpp src/filetypes/txt/*.cpp src/filetypes/epub/*.cpp src/reader/*.cpp src/reader/views/*.cpp src/reader/views/token_view/*.cpp src/sys/*.cpp src/util/*.cpp src/doc_api/*.cpp src/extern/hash-library/*.cpp))
 READER_SRC   := $(COMMON_SRC) src/reader/main.cpp
 SANDBOX_SRC  := $(COMMON_SRC) $(wildcard src/sandbox/*.cpp)
@@ -32,7 +30,7 @@ APP_READER_TARGET := reader
 APP_SANDBOX_TARGET := sandbox
 APP_TEST_TARGET := test
 
-ROTOZOOM_OBJECT := $(OBJ_DIR)/SDL_rotozoom.o
+ROTOZOOM_OBJECT := $(OBJ_DIR)/SDL2_rotozoom.o
 READER_OBJECTS  := $(READER_SRC:%.cpp=$(OBJ_DIR)/%.o) $(ROTOZOOM_OBJECT)
 SANDBOX_OBJECTS := $(SANDBOX_SRC:%.cpp=$(OBJ_DIR)/%.o) $(ROTOZOOM_OBJECT)
 TEST_OBJECTS    := $(TEST_SRC:%.cpp=$(OBJ_DIR)/%.o) $(ROTOZOOM_OBJECT)

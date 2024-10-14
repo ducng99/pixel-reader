@@ -2,7 +2,7 @@
 #define SDL_UTILS_H_
 
 #include "./sdl_pointer.h"
-#include <SDL/SDL_ttf.h>
+#include <SDL2/SDL_ttf.h>
 #include <string>
 
 int detect_line_height(TTF_Font *font);

@@ -23,7 +23,7 @@ void discover_fonts()
     }
 
     auto test_font = [](std::filesystem::path file_path) {
-        auto norm_ext = to_lower(file_path.extension());
+        auto norm_ext = to_lower(file_path.extension().string());
         return std::filesystem::exists(file_path) && (norm_ext == ".ttf" || norm_ext == ".ttc");
     };
 
@@ -32,6 +32,7 @@ void discover_fonts()
         std::filesystem::path path = std::filesystem::path(FONT_DIR) / entry.name;
         if (!entry.is_dir && test_font(path))
         {
+            std::cout << "Added font: " << path.string() << std::endl;
             available_fonts.push_back(path.string());
         }
     }

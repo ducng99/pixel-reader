@@ -10,6 +10,7 @@ static std::unordered_map<uint32_t, fonts_lookup> font_cache;
 static TTF_Font *load_with_warning(const std::string &font, uint32_t size, FontLoadErrorOpt opt)
 {
     TTF_Font *font_ptr = TTF_OpenFont(font.c_str(), size);
+
     if (!font_ptr)
     {
         std::cerr << "Failed to load font: " << font << " " << size << std::endl;

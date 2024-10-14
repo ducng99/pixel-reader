@@ -1,7 +1,7 @@
 #ifndef SDL_POINTER_H_
 #define SDL_POINTER_H_
 
-#include <SDL/SDL_ttf.h>
+#include <SDL2//SDL_ttf.h>
 #include <memory>
 
 struct SDL_Deleter {

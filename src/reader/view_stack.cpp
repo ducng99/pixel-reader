@@ -51,7 +51,7 @@ bool ViewStack::is_done()
     return views.empty();
 }
 
-void ViewStack::on_keypress(SDLKey key)
+void ViewStack::on_keypress(SDL_Scancode key)
 {
     if (!views.empty())
     {
@@ -59,7 +59,7 @@ void ViewStack::on_keypress(SDLKey key)
     }
 }
 
-void ViewStack::on_keyheld(SDLKey key, uint32_t hold_time_ms)
+void ViewStack::on_keyheld(SDL_Scancode key, uint32_t hold_time_ms)
 {
     if (!views.empty())
     {

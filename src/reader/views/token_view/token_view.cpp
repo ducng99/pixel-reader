@@ -341,7 +341,7 @@ void TokenView::scroll(int num_lines)
     }
 }
 
-void TokenView::on_keypress(SDLKey key)
+void TokenView::on_keypress(SDL_Scancode key)
 {
     switch (key) {
         case SW_BTN_UP:
@@ -385,7 +385,7 @@ void TokenView::on_keypress(SDLKey key)
     }
 }
 
-void TokenView::on_keyheld(SDLKey key, uint32_t held_time_ms)
+void TokenView::on_keyheld(SDL_Scancode key, uint32_t held_time_ms)
 {
     switch (key) {
         case SW_BTN_UP:

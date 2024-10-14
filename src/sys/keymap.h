@@ -1,19 +1,17 @@
-#include <SDL/SDL_keysym.h>
+#include <SDL2/SDL_scancode.h>
 
-// https://github.com/OnionUI/Onion/blob/main/src/common/system/keymap_sw.h
-#define SW_BTN_UP       SDLK_UP
-#define SW_BTN_DOWN     SDLK_DOWN
-#define SW_BTN_LEFT     SDLK_LEFT
-#define SW_BTN_RIGHT    SDLK_RIGHT
-#define SW_BTN_A        SDLK_SPACE
-#define SW_BTN_B        SDLK_LCTRL
-#define SW_BTN_X        SDLK_LSHIFT
-#define SW_BTN_Y        SDLK_LALT
-#define SW_BTN_L1       SDLK_e
-#define SW_BTN_R1       SDLK_t
-#define SW_BTN_L2       SDLK_TAB
-#define SW_BTN_R2       SDLK_BACKSPACE
-#define SW_BTN_SELECT   SDLK_RCTRL
-#define SW_BTN_START    SDLK_RETURN
-#define SW_BTN_MENU     SDLK_ESCAPE
-#define SW_BTN_POWER    SDLK_FIRST
+#define SW_BTN_UP       SDL_Scancode::SDL_SCANCODE_UP
+#define SW_BTN_DOWN     SDL_Scancode::SDL_SCANCODE_DOWN
+#define SW_BTN_LEFT     SDL_Scancode::SDL_SCANCODE_LEFT
+#define SW_BTN_RIGHT    SDL_Scancode::SDL_SCANCODE_RIGHT
+#define SW_BTN_A        SDL_Scancode::SDL_SCANCODE_SPACE
+#define SW_BTN_B        SDL_Scancode::SDL_SCANCODE_LCTRL
+#define SW_BTN_X        SDL_Scancode::SDL_SCANCODE_LSHIFT
+#define SW_BTN_Y        SDL_Scancode::SDL_SCANCODE_LALT
+#define SW_BTN_L1       SDL_Scancode::SDL_SCANCODE_E
+#define SW_BTN_R1       SDL_Scancode::SDL_SCANCODE_T
+#define SW_BTN_L2       SDL_Scancode::SDL_SCANCODE_TAB
+#define SW_BTN_R2       SDL_Scancode::SDL_SCANCODE_BACKSPACE
+#define SW_BTN_SELECT   SDL_Scancode::SDL_SCANCODE_RCTRL
+#define SW_BTN_START    SDL_Scancode::SDL_SCANCODE_RETURN
+#define SW_BTN_POWER    SDL_Scancode::SDL_SCANCODE_UNKNOWN

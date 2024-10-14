@@ -20,7 +20,7 @@ void draw_modal_border(uint32_t w, uint32_t h, const ColorTheme &theme, SDL_Surf
                 0, 0, 0, 0
             )
         };
-        SDL_SetAlpha(mask.get(), SDL_SRCALPHA, 128);
+        SDL_SetSurfaceAlphaMod(mask.get(), 128);
 
         SDL_Rect rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
         SDL_FillRect(

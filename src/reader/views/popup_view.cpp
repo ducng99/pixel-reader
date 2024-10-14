@@ -68,7 +68,7 @@ bool PopupView::is_modal()
     return true;
 }
 
-void PopupView::on_keypress(SDLKey)
+void PopupView::on_keypress(SDL_Scancode)
 {
     _is_done = true;
 }
