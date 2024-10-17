@@ -13,6 +13,7 @@ constexpr const char *SETTINGS_SHOULDER_KEYMAP = "shoulder_keymap";
 constexpr const char *SETTINGS_KEY_COLOR_THEME = "color_theme";
 constexpr const char *SETTINGS_KEY_FONT_NAME = "font_name";
 constexpr const char *SETTINGS_KEY_FONT_SIZE = "font_size";
+constexpr const char *SETTINGS_KEY_LINE_PADDING = "line_padding";
 constexpr const char *SETTINGS_PROGRESS_REPORTING = "progress_reporting";
 
 } // namespace
@@ -91,4 +92,20 @@ std::optional<uint32_t> settings_get_font_size(const StateStore &state_store)
 void settings_set_font_size(StateStore &state_store, uint32_t font_size)
 {
     state_store.set_setting(SETTINGS_KEY_FONT_SIZE, std::to_string(font_size));
+}
+
+std::optional<uint32_t> settings_get_line_padding(const StateStore &state_store)
+{
+    auto line_padding = state_store.get_setting(SETTINGS_KEY_LINE_PADDING);
+    if (!line_padding)
+    {
+        return std::nullopt;
+    }
+    
+    return try_decode_uint(*line_padding);
+}
+
+void settings_set_line_padding(StateStore &state_store, uint32_t line_padding)
+{
+    state_store.set_setting(SETTINGS_KEY_LINE_PADDING, std::to_string(line_padding));
 }

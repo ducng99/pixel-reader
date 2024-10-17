@@ -18,6 +18,11 @@
 #define DEFAULT_FONT_SIZE  26
 #define FONT_SIZE_STEP     2
 
+#define MAX_LINE_PADDING        32
+#define MIN_LINE_PADDING        4
+#define DEFAULT_LINE_PADDING    4
+#define LINE_PADDING_STEP       4
+
 #define DIALOG_PADDING       25
 #define DIALOG_BORDER_WIDTH  3
 

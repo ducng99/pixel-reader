@@ -9,6 +9,7 @@
 struct SystemStylingState {
     std::string font_name;
     uint32_t font_size;
+    uint32_t line_padding;
 
     std::string color_theme;
     ColorTheme loaded_color_theme;
@@ -21,18 +22,20 @@ struct SystemStylingState {
     SystemStylingState(
         const std::string &font_name,
         uint32_t font_size,
+        uint32_t line_padding,
         const std::string &color_theme,
         const std::string &shoulder_keymap
     ) : font_name(font_name),
         font_size(font_size),
+        line_padding(line_padding),
         color_theme(color_theme),
         loaded_color_theme(get_color_theme(color_theme)),
         shoulder_keymap(shoulder_keymap)
     {}
 };
 
-SystemStyling::SystemStyling(const std::string &font_name, uint32_t font_size, const std::string &color_theme, const std::string &shoulder_keymap)
-    : state(std::make_unique<SystemStylingState>(font_name, font_size, color_theme, shoulder_keymap))
+SystemStyling::SystemStyling(const std::string &font_name, uint32_t font_size, uint32_t line_padding, const std::string &color_theme, const std::string &shoulder_keymap)
+    : state(std::make_unique<SystemStylingState>(font_name, font_size, line_padding, color_theme, shoulder_keymap))
 {
 }
 
@@ -90,6 +93,32 @@ uint32_t SystemStyling::get_next_font_size() const
 {
     uint32_t range = MAX_FONT_SIZE - MIN_FONT_SIZE + FONT_SIZE_STEP;
     return (state->font_size - MIN_FONT_SIZE + FONT_SIZE_STEP) % range + MIN_FONT_SIZE;
+}
+
+void SystemStyling::set_line_padding(uint32_t line_padding)
+{
+    if (state->line_padding != line_padding)
+    {
+        state->line_padding = line_padding;
+        notify_subscribers(ChangeId::LINE_PADDING);
+    }
+}
+
+uint32_t SystemStyling::get_line_padding() const
+{
+    return state->line_padding;
+}
+
+uint32_t SystemStyling::get_prev_line_padding() const
+{
+    uint32_t range = MAX_LINE_PADDING - MIN_LINE_PADDING + LINE_PADDING_STEP;
+    return (state->line_padding - MIN_LINE_PADDING + range - LINE_PADDING_STEP) % range + MIN_LINE_PADDING;
+}
+
+uint32_t SystemStyling::get_next_line_padding() const
+{
+    uint32_t range = MAX_LINE_PADDING - MIN_LINE_PADDING + LINE_PADDING_STEP;
+    return (state->line_padding - MIN_LINE_PADDING + LINE_PADDING_STEP) % range + MIN_LINE_PADDING;
 }
 
 void SystemStyling::set_color_theme(const std::string &color_theme)

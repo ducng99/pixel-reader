@@ -75,10 +75,16 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
             line_selected == 1 ? style_hl : style_normal
         );
 
+        auto line_padding_label = render_text("Line padding:", style_label);
+        auto line_padding_value = render_text(
+            std::to_string(sys_styling.get_line_padding()).c_str(),
+            line_selected == 2 ? style_hl : style_normal
+        );
+
         auto font_name_label = render_text("Font:", style_label);
         auto font_name_value = render_text(
             std::filesystem::path(sys_styling.get_font_name()).filename().stem().string().c_str(),
-            line_selected == 2 ? style_hl : style_normal,
+            line_selected == 3 ? style_hl : style_normal,
             user_font
         );
 
@@ -87,7 +93,7 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
             get_shoulder_keymap_display_name(
                 sys_styling.get_shoulder_keymap()
             ).c_str(),
-            line_selected == 3 ? style_hl : style_normal
+            line_selected == 4 ? style_hl : style_normal
         );
 
         auto progress_label = render_text("Progress:", style_label);
@@ -95,7 +101,7 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
             token_view_styling.get_progress_reporting() == ProgressReporting::CHAPTER_PERCENT ?
             "Chapter %" :
             "Book %",
-            line_selected == 4 ? style_hl : style_normal
+            line_selected == 5 ? style_hl : style_normal
         );
 
         Uint16 content_w;
@@ -106,6 +112,8 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
                 theme_value->w + arrow_w,
                 font_size_label->w,
                 font_size_value->w + arrow_w,
+                line_padding_label->w,
+                line_padding_value->w + arrow_w,
                 font_name_label->w,
                 font_name_value->w + arrow_w,
                 shoulder_keymap_label->w,
@@ -193,22 +201,29 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
 
             if (is_line_shown(2))
             {
-                push_text(font_name_label.get());
-                push_text(font_name_value.get(), line_selected == 2);
+                push_text(line_padding_label.get());
+                push_text(line_padding_value.get(), line_selected == 2);
                 rect.y += text_padding;
             }
 
             if (is_line_shown(3))
             {
-                push_text(shoulder_keymap_label.get());
-                push_text(shoulder_keymap_value.get(), line_selected == 3);
+                push_text(font_name_label.get());
+                push_text(font_name_value.get(), line_selected == 3);
                 rect.y += text_padding;
             }
 
             if (is_line_shown(4))
             {
+                push_text(shoulder_keymap_label.get());
+                push_text(shoulder_keymap_value.get(), line_selected == 4);
+                rect.y += text_padding;
+            }
+
+            if (is_line_shown(5))
+            {
                 push_text(progress_label.get());
-                push_text(progress_value.get(), line_selected == 4);
+                push_text(progress_value.get(), line_selected == 5);
             }
         }
 
@@ -245,6 +260,15 @@ void SettingsView::on_change_font_size(int dir)
         (dir < 0) ?
             sys_styling.get_prev_font_size() :
             sys_styling.get_next_font_size()
+    );
+}
+
+void SettingsView::on_change_line_padding(int dir)
+{
+    sys_styling.set_line_padding(
+        (dir < 0) ?
+            sys_styling.get_prev_line_padding() :
+            sys_styling.get_next_line_padding()
     );
 }
 
@@ -300,9 +324,13 @@ void SettingsView::on_keypress(SDL_GameControllerButton key)
                 }
                 else if (line_selected == 2)
                 {
-                    on_change_font_name(dir);
+                    on_change_line_padding(dir);
                 }
                 else if (line_selected == 3)
+                {
+                    on_change_font_name(dir);
+                }
+                else if (line_selected == 4)
                 {
                     on_change_shoulder_keymap(dir);
                 }

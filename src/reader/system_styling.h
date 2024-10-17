@@ -15,6 +15,7 @@ public:
     enum class ChangeId {
         FONT_NAME,
         FONT_SIZE,
+        LINE_PADDING,
         COLOR_THEME,
         SHOULDER_KEYMAP,
     };
@@ -27,6 +28,7 @@ public:
     SystemStyling(
         const std::string &font_name,
         uint32_t font_size,
+        uint32_t line_padding,
         const std::string &color_theme,
         const std::string &shoulder_keymap
     );
@@ -42,6 +44,12 @@ public:
     uint32_t get_font_size() const;
     uint32_t get_prev_font_size() const;
     uint32_t get_next_font_size() const;
+    
+    // Line padding
+    void set_line_padding(uint32_t line_padding);
+    uint32_t get_line_padding() const;
+    uint32_t get_next_line_padding() const;
+    uint32_t get_prev_line_padding() const;
 
     // Color theme definition
     void set_color_theme(const std::string &color_theme);

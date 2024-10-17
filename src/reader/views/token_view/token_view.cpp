@@ -39,7 +39,6 @@ struct TokenViewState
 
     TTF_Font *current_font = nullptr;
 
-    const int line_padding = 4;
     int line_height;
 
     TokenLineScroller line_scroller;
@@ -84,10 +83,10 @@ struct TokenViewState
         : sys_styling(sys_styling),
           token_view_styling(token_view_styling),
           sys_styling_sub_id(sys_styling.subscribe_to_changes([this](SystemStyling::ChangeId change_id) {
-              if (change_id == SystemStyling::ChangeId::FONT_SIZE || change_id == SystemStyling::ChangeId::FONT_NAME)
+              if (change_id == SystemStyling::ChangeId::FONT_SIZE || change_id == SystemStyling::ChangeId::FONT_NAME || change_id == SystemStyling::ChangeId::LINE_PADDING)
               {
                   current_font = this->sys_styling.get_loaded_font();
-                  line_height = detect_line_height(current_font) + line_padding;
+                  line_height = detect_line_height(current_font) + this->sys_styling.get_line_padding();
                   line_scroller.set_line_height_pixels(line_height);
                   line_scroller.reset_buffer();  // need to re-wrap lines if font-size changed
               }
@@ -97,14 +96,14 @@ struct TokenViewState
               needs_render = true;
           })),
           current_font(sys_styling.get_loaded_font()),
-          line_height(detect_line_height(sys_styling.get_font_name(), sys_styling.get_font_size()) + line_padding),
+          line_height(detect_line_height(sys_styling.get_font_name(), sys_styling.get_font_size()) + sys_styling.get_line_padding()),
           line_scroller(
               reader,
               address,
               [this](const char *s, uint32_t len) {
                   return line_fits_on_screen(
                       current_font,
-                      SCREEN_WIDTH - line_padding * 2,
+                      SCREEN_WIDTH - this->sys_styling.get_line_padding() * 2,
                       s,
                       len
                   );
@@ -145,7 +144,7 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
     TTF_Font *font = state->current_font;
     const auto &theme = state->sys_styling.get_loaded_color_theme();
     const int line_height = state->line_height;
-    const int line_padding = state->line_padding;
+    const int line_padding = state->sys_styling.get_line_padding();
 
     // Clear screen
     {

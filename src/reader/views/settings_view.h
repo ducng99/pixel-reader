@@ -25,6 +25,7 @@ class SettingsView: public View
     void on_change_theme(int dir);
     void on_change_font_size(int dir);
     void on_change_font_name(int dir);
+    void on_change_line_padding(int dir);
     void on_change_shoulder_keymap(int dir);
     void on_change_progress();
 

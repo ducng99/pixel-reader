@@ -202,6 +202,7 @@ int main(int argc, char **argv)
     // Preload & check fonts
     auto init_font_name = get_valid_font_name(settings_get_font_name(state_store).value_or(DEFAULT_FONT_NAME));
     auto init_font_size = bound(settings_get_font_size(state_store).value_or(DEFAULT_FONT_SIZE), MIN_FONT_SIZE, MAX_FONT_SIZE);
+    auto init_line_padding = bound(settings_get_line_padding(state_store).value_or(DEFAULT_LINE_PADDING), MIN_LINE_PADDING, MAX_LINE_PADDING);
     if (
         !cached_load_font(SYSTEM_FONT, init_font_size, FontLoadErrorOpt::NoThrow) ||
         !cached_load_font(init_font_name, init_font_size, FontLoadErrorOpt::NoThrow)
@@ -217,6 +218,7 @@ int main(int argc, char **argv)
     SystemStyling sys_styling(
         init_font_name,
         init_font_size,
+        init_line_padding,
         get_valid_theme(settings_get_color_theme(state_store).value_or(DEFAULT_COLOR_THEME)),
         get_valid_shoulder_keymap(settings_get_shoulder_keymap(state_store).value_or(DEFAULT_SHOULDER_KEYMAP))
     );
@@ -225,12 +227,13 @@ int main(int argc, char **argv)
         settings_set_color_theme(state_store, sys_styling.get_color_theme());
         settings_set_font_name(state_store, sys_styling.get_font_name());
         settings_set_font_size(state_store, sys_styling.get_font_size());
+        settings_set_line_padding(state_store, sys_styling.get_line_padding());
         settings_set_shoulder_keymap(state_store, sys_styling.get_shoulder_keymap());
     });
     
     std::cout << "System stylings" << std::endl;
 
-    // Text Styling
+    // View styling
     TokenViewStyling token_view_styling(
         settings_get_show_title_bar(state_store).value_or(DEFAULT_SHOW_PROGRESS),
         settings_get_progress_reporting(state_store).value_or(DEFAULT_PROGRESS_REPORTING)
@@ -241,7 +244,7 @@ int main(int argc, char **argv)
         settings_set_progress_reporting(state_store, token_view_styling.get_progress_reporting());
     });
     
-    std::cout << "Text stylings" << std::endl;
+    std::cout << "View stylings" << std::endl;
 
     // Setup views
     TaskQueue task_queue;
