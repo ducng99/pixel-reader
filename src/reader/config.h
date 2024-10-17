@@ -21,7 +21,7 @@
 #define DIALOG_PADDING       25
 #define DIALOG_BORDER_WIDTH  3
 
-#define DEFAULT_COLOR_THEME "night_contrast"
+#define DEFAULT_COLOR_THEME "dark_sepia"
 
 #define CONFIG_FILE_PATH "reader.cfg"
 #define FALLBACK_STORE_PATH DEFAULT_STORAGE ".pixel_reader_store"

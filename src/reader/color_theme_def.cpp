@@ -10,7 +10,7 @@ namespace
 
 const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
     {
-        "night_contrast",
+        "dark_contrast",
         {
             {0, 0, 0, 0},       // background
             {240, 240, 240, 0}, // main text
@@ -47,6 +47,16 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
             {96, 0, 0, 0},  // secondary text
             {192, 0, 0, 0}, // highlight background
             {0, 0, 0, 0},   // highlight text
+        }
+    },
+    {
+        "dark_sepia",
+        {
+            {24, 26, 27, 0},       // background
+            {209, 205, 199, 0}, // main text
+            {164, 157, 145, 0},    // secondary text
+            {24, 26, 27, 0},  // highlight background
+            {118, 232, 115, 0}, // highlight text
         }
     },
 };
