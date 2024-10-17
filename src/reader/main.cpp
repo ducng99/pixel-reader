@@ -305,10 +305,12 @@ int main(int argc, char **argv)
     SDL_RenderPresent(sdlRenderer);
     
     std::cout << "Initial render" << std::endl;
+    
+    bool ran_user_code = true;
 
     while (!quit)
     {
-        bool ran_user_code = task_queue.drain();
+        ran_user_code = task_queue.drain() || ran_user_code;
 
         SDL_Event event;
         while (SDL_PollEvent(&event))
@@ -426,6 +428,8 @@ int main(int argc, char **argv)
                 SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
                 SDL_RenderPresent(sdlRenderer);
             }
+            
+            ran_user_code = false;
         }
 
         if (!quit)
