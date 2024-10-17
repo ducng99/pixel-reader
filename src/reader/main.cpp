@@ -95,30 +95,42 @@ void initialize_views(
 class SystemKeyChordTracker
 {
     bool _select_held = false;
+    bool _exit_requested = false;
 
 public:
 
     // Report keypress event. Return filtered key code.
-    SDL_Scancode on_keypress(SDL_Scancode key)
+    SDL_GameControllerButton on_keypress(SDL_GameControllerButton key)
     {
         // Block any other keys while special key is held
-        SDL_Scancode filtered_key = (_select_held) ? SDL_SCANCODE_UNKNOWN : key;
+        SDL_GameControllerButton filtered_key = (_select_held) ? SW_BTN_UNKNOWN : key;
 
         if (key == SW_BTN_SELECT)
         {
             _select_held = true;
+        }
+        else if (key == SW_BTN_START)
+        {
+            if (_select_held) {
+                _exit_requested = true;
+            }
         }
 
         return filtered_key;
     }
 
     // Report keyrelease event.
-    void on_keyrelease(SDL_Scancode key)
+    void on_keyrelease(SDL_GameControllerButton key)
     {
         if (key == SW_BTN_SELECT)
         {
             _select_held = false;
         }
+    }
+    
+    bool exit_requested() const
+    {
+        return _exit_requested;
     }
 };
 
@@ -158,9 +170,14 @@ int main(int argc, char **argv)
     }
 
     std::cout << "Screen Size: " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << std::endl;
+    
+    if (const char* db_file = SDL_getenv("SDL_GAMECONTROLLERCONFIG_FILE")) {
+        SDL_GameControllerAddMappingsFromFile(db_file);
+        std::cout << "Load SDL game controllers mapping file: " << db_file << std::endl;
+    }
 
     // SDL Init
-    SDL_Init(SDL_INIT_VIDEO);
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
     SDL_ShowCursor(SDL_DISABLE);
     TTF_Init();
     atexit(SDL_Quit);
@@ -266,7 +283,7 @@ int main(int argc, char **argv)
     );
     SystemKeyChordTracker chord_tracker;
 
-    auto key_held_callback = [&view_stack](SDL_Scancode key, uint32_t held_ms) {
+    auto key_held_callback = [&view_stack](SDL_GameControllerButton key, uint32_t held_ms) {
         view_stack.on_keyheld(key, held_ms);
     };
     
@@ -298,47 +315,58 @@ int main(int argc, char **argv)
                 case SDL_QUIT:
                     quit = true;
                     break;
-                case SDL_KEYDOWN:
+                case SDL_CONTROLLERDEVICEADDED:
+                    SDL_GameControllerOpen(event.cdevice.which);
+                    break;
+                case SDL_CONTROLLERDEVICEREMOVED:
+                    if (SDL_GameController* controller = SDL_GameControllerFromInstanceID(event.cdevice.which)) {
+                        SDL_GameControllerClose(controller);
+                    }
+                    break;
+                case SDL_CONTROLLERBUTTONDOWN:
                     {
                         idle_timer.reset();
 
-                        SDL_Scancode key = chord_tracker.on_keypress(event.key.keysym.scancode);
+                        SDL_GameControllerButton key = chord_tracker.on_keypress((SDL_GameControllerButton)event.cbutton.button);
 
-                        if (key == SW_BTN_POWER)
-                        {
-                            state_store.flush();
-                        }
-                        else
-                        {
-                            view_stack.on_keypress(key);
+                        held_key_tracker.on_keypress(key);
+                        view_stack.on_keypress(key);
 
-                            if (key == SW_BTN_X)
+                        if (key == SW_BTN_X)
+                        {
+                            if (view_stack.top_view() != settings_view)
                             {
-                                if (view_stack.top_view() != settings_view)
-                                {
-                                    settings_view->unterminate();
-                                    view_stack.push(settings_view);
-                                }
-                                else
-                                {
-                                    settings_view->terminate();
-                                }
+                                settings_view->unterminate();
+                                view_stack.push(settings_view);
                             }
-
-                            ran_user_code = true;
+                            else
+                            {
+                                settings_view->terminate();
+                            }
                         }
+
+                        ran_user_code = true;
                     }
                     break;
-                case SDL_KEYUP:
+                case SDL_CONTROLLERBUTTONUP:
                     {
-                        SDL_Scancode key = event.key.keysym.scancode;
+                        SDL_GameControllerButton key = (SDL_GameControllerButton)event.cbutton.button;
                         chord_tracker.on_keyrelease(key);
+                        held_key_tracker.on_keyrelease(key);
+                    }
+                    break;
+                case SDL_KEYDOWN:
+                    if (event.key.keysym.scancode == SW_BTN_POWER)
+                    {
+                        state_store.flush();
                     }
                     break;
                 default:
                     break;
             }
         }
+        
+        quit = quit || chord_tracker.exit_requested();
 
         held_key_tracker.accumulate(avg_loop_time); // Pretend perfect loop timing for event firing consistency
         ran_user_code = held_key_tracker.for_longest_held(key_held_callback) || ran_user_code;

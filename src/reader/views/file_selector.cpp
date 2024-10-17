@@ -163,12 +163,12 @@ bool FileSelector::is_done()
     return state->menu.is_done();
 }
 
-void FileSelector::on_keypress(SDL_Scancode key)
+void FileSelector::on_keypress(SDL_GameControllerButton key)
 {
     state->menu.on_keypress(key);
 }
 
-void FileSelector::on_keyheld(SDL_Scancode key, uint32_t held_time_ms)
+void FileSelector::on_keyheld(SDL_GameControllerButton key, uint32_t held_time_ms)
 {
     state->menu.on_keyheld(key, held_time_ms);
 }

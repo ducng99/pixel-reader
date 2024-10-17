@@ -23,7 +23,7 @@ public:
     bool render(SDL_Surface *dest_surface, bool force_render) override;
     bool is_done() override;
     bool is_modal() override;
-    void on_keypress(SDL_Scancode key) override;
+    void on_keypress(SDL_GameControllerButton key) override;
 };
 
 #endif

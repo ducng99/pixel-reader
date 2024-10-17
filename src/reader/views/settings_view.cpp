@@ -275,7 +275,7 @@ void SettingsView::on_change_progress()
     );
 }
 
-void SettingsView::on_keypress(SDL_Scancode key)
+void SettingsView::on_keypress(SDL_GameControllerButton key)
 {
     switch (key) {
         case SW_BTN_UP:

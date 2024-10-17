@@ -36,8 +36,8 @@ public:
     bool render(SDL_Surface *dest_surface, bool force_render) override;
     bool is_done() override;
 
-    void on_keypress(SDL_Scancode key) override;
-    void on_keyheld(SDL_Scancode key, uint32_t hold_time_ms) override;
+    void on_keypress(SDL_GameControllerButton key) override;
+    void on_keyheld(SDL_GameControllerButton key, uint32_t hold_time_ms) override;
 
     void set_on_change_address(std::function<void(DocAddr)> callback);
 
