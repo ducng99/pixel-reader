@@ -340,7 +340,7 @@ void TokenView::scroll(int num_lines)
     }
 }
 
-void TokenView::on_keypress(SDL_GameControllerButton key)
+void TokenView::on_keypress(SW_BTN_TYPE key)
 {
     switch (key) {
         case SW_BTN_UP:
@@ -384,7 +384,7 @@ void TokenView::on_keypress(SDL_GameControllerButton key)
     }
 }
 
-void TokenView::on_keyheld(SDL_GameControllerButton key, uint32_t held_time_ms)
+void TokenView::on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms)
 {
     switch (key) {
         case SW_BTN_UP:

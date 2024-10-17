@@ -14,6 +14,10 @@ OBJ_DIR  := $(BUILD)/objects
 APP_DIR  := $(BUILD)
 INCLUDE  := -Isrc
 
+ifneq (,$(USE_KEYBOARD))
+  CXXFLAGS := $(CXXFLAGS) -DUSE_KEYBOARD
+endif
+
 ifeq ($(PLATFORM),rocknix)
   INCLUDE := $(INCLUDE) -I$(PREFIX)/include/ -I$(PREFIX)/include/libxml2/
 else

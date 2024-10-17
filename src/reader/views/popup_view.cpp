@@ -68,7 +68,7 @@ bool PopupView::is_modal()
     return true;
 }
 
-void PopupView::on_keypress(SDL_GameControllerButton)
+void PopupView::on_keypress(SW_BTN_TYPE)
 {
     _is_done = true;
 }

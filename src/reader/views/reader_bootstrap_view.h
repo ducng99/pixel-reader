@@ -34,7 +34,7 @@ public:
 
     bool render(SDL_Surface *dest_surface, bool force_render) override;
     bool is_done() override;
-    void on_keypress(SDL_GameControllerButton) override;
+    void on_keypress(SW_BTN_TYPE) override;
 };
 
 #endif

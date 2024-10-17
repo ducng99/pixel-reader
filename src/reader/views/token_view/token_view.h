@@ -31,8 +31,8 @@ public:
 
     bool render(SDL_Surface *dest_surface, bool force_render) override;
     bool is_done() override;
-    void on_keypress(SDL_GameControllerButton key) override;
-    void on_keyheld(SDL_GameControllerButton key, uint32_t held_time_ms) override;
+    void on_keypress(SW_BTN_TYPE key) override;
+    void on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms) override;
 
     DocAddr get_address() const;
     void seek_to_address(DocAddr address);

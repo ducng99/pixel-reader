@@ -2,7 +2,7 @@
 
 #include <SDL2/SDL.h>
 
-HeldKeyTracker::HeldKeyTracker(std::vector<SDL_GameControllerButton> keycodes)
+HeldKeyTracker::HeldKeyTracker(std::vector<SW_BTN_TYPE> keycodes)
     : keycodes(keycodes),
       held_times(keycodes.size(), 0),
       held_keys()
@@ -13,12 +13,12 @@ HeldKeyTracker::~HeldKeyTracker()
 {
 }
 
-void HeldKeyTracker::on_keypress(SDL_GameControllerButton button)
+void HeldKeyTracker::on_keypress(SW_BTN_TYPE button)
 {
     held_keys[button] = true;
 }
 
-void HeldKeyTracker::on_keyrelease(SDL_GameControllerButton button)
+void HeldKeyTracker::on_keyrelease(SW_BTN_TYPE button)
 {
     held_keys[button] = false;
 }
@@ -45,16 +45,16 @@ void HeldKeyTracker::accumulate(uint32_t ms)
     }
 }
 
-bool HeldKeyTracker::for_longest_held(const std::function<void(SDL_GameControllerButton, uint32_t)> &callback)
+bool HeldKeyTracker::for_longest_held(const std::function<void(SW_BTN_TYPE, uint32_t)> &callback)
 {
     uint32_t longest_time = 0;
-    SDL_GameControllerButton longest_key = SW_BTN_UNKNOWN;
+    SW_BTN_TYPE longest_key = SW_BTN_UNKNOWN;
 
     auto key_it = keycodes.begin();
     auto time_it = held_times.begin();
     while (key_it != keycodes.end())
     {
-        SDL_GameControllerButton key = *key_it;
+        SW_BTN_TYPE key = *key_it;
         uint32_t time = *time_it;
         if (time > longest_time)
         {

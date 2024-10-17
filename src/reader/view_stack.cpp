@@ -51,7 +51,7 @@ bool ViewStack::is_done()
     return views.empty();
 }
 
-void ViewStack::on_keypress(SDL_GameControllerButton key)
+void ViewStack::on_keypress(SW_BTN_TYPE key)
 {
     if (!views.empty())
     {
@@ -59,7 +59,7 @@ void ViewStack::on_keypress(SDL_GameControllerButton key)
     }
 }
 
-void ViewStack::on_keyheld(SDL_GameControllerButton key, uint32_t hold_time_ms)
+void ViewStack::on_keyheld(SW_BTN_TYPE key, uint32_t hold_time_ms)
 {
     if (!views.empty())
     {

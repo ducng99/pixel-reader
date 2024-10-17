@@ -100,10 +100,10 @@ class SystemKeyChordTracker
 public:
 
     // Report keypress event. Return filtered key code.
-    SDL_GameControllerButton on_keypress(SDL_GameControllerButton key)
+    SW_BTN_TYPE on_keypress(SW_BTN_TYPE key)
     {
         // Block any other keys while special key is held
-        SDL_GameControllerButton filtered_key = (_select_held) ? SW_BTN_UNKNOWN : key;
+        SW_BTN_TYPE filtered_key = (_select_held) ? SW_BTN_UNKNOWN : key;
 
         if (key == SW_BTN_SELECT)
         {
@@ -120,7 +120,7 @@ public:
     }
 
     // Report keyrelease event.
-    void on_keyrelease(SDL_GameControllerButton key)
+    void on_keyrelease(SW_BTN_TYPE key)
     {
         if (key == SW_BTN_SELECT)
         {
@@ -286,7 +286,7 @@ int main(int argc, char **argv)
     );
     SystemKeyChordTracker chord_tracker;
 
-    auto key_held_callback = [&view_stack](SDL_GameControllerButton key, uint32_t held_ms) {
+    auto key_held_callback = [&view_stack](SW_BTN_TYPE key, uint32_t held_ms) {
         view_stack.on_keyheld(key, held_ms);
     };
     
@@ -318,6 +318,41 @@ int main(int argc, char **argv)
                 case SDL_QUIT:
                     quit = true;
                     break;
+#ifdef USE_KEYBOARD
+                case SDL_KEYDOWN:
+                    {
+                        idle_timer.reset();
+
+                        SW_BTN_TYPE key = chord_tracker.on_keypress(event.key.keysym.scancode);
+
+                        held_key_tracker.on_keypress(key);
+                        view_stack.on_keypress(key);
+
+                        if (key == SW_BTN_POWER)
+                        {
+                            state_store.flush();
+                        }
+                        else if (key == SW_BTN_X)
+                        {
+                            if (view_stack.top_view() != settings_view)
+                            {
+                                settings_view->unterminate();
+                                view_stack.push(settings_view);
+                            }
+                            else
+                            {
+                                settings_view->terminate();
+                            }
+                        }
+
+                        ran_user_code = true;
+                    }
+                    break;
+                case SDL_KEYUP:
+                    chord_tracker.on_keyrelease(event.key.keysym.scancode);
+                    held_key_tracker.on_keyrelease(event.key.keysym.scancode);
+                    break;
+#else
                 case SDL_CONTROLLERDEVICEADDED:
                     SDL_GameControllerOpen(event.cdevice.which);
                     break;
@@ -330,7 +365,7 @@ int main(int argc, char **argv)
                     {
                         idle_timer.reset();
 
-                        SDL_GameControllerButton key = chord_tracker.on_keypress((SDL_GameControllerButton)event.cbutton.button);
+                        SW_BTN_TYPE key = chord_tracker.on_keypress((SW_BTN_TYPE)event.cbutton.button);
 
                         held_key_tracker.on_keypress(key);
                         view_stack.on_keypress(key);
@@ -353,7 +388,7 @@ int main(int argc, char **argv)
                     break;
                 case SDL_CONTROLLERBUTTONUP:
                     {
-                        SDL_GameControllerButton key = (SDL_GameControllerButton)event.cbutton.button;
+                        SW_BTN_TYPE key = (SW_BTN_TYPE)event.cbutton.button;
                         chord_tracker.on_keyrelease(key);
                         held_key_tracker.on_keyrelease(key);
                     }
@@ -364,6 +399,7 @@ int main(int argc, char **argv)
                         state_store.flush();
                     }
                     break;
+#endif
                 default:
                     break;
             }

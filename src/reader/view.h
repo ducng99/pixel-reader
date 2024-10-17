@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL_gamecontroller.h>
 #include <SDL2/SDL_video.h>
+#include "sys/keymap.h"
 
 class View
 {
@@ -17,10 +18,10 @@ public:
     virtual bool is_modal() { return false; }
 
     // Key down event.
-    virtual void on_keypress(SDL_GameControllerButton key) = 0;
+    virtual void on_keypress(SW_BTN_TYPE key) = 0;
 
     // Pass key and held time in ms.
-    virtual void on_keyheld(SDL_GameControllerButton, uint32_t) {}
+    virtual void on_keyheld(SW_BTN_TYPE, uint32_t) {}
 
     // This view has been popped from the stack (now defunct).
     virtual void on_pop() {}
