@@ -19,6 +19,9 @@ To override default directories, some envionment variables can be set
 - `STORAGE_PATH`: A writeable directory containing `resources` dir, to include fonts and configs
 - `BROWSE_PATH`: A readable directory to start ebook file browser
 
+Build flags:
+- `USE_KEYBOARD`: Build for keyboard instead of game controllers
+
 ## Development Reference
 
 ### Desktop Build
