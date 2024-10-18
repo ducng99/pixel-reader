@@ -15,7 +15,7 @@
 #define SW_BTN_B        SDL_Scancode::SDL_SCANCODE_X
 #define SW_BTN_X        SDL_Scancode::SDL_SCANCODE_C
 #define SW_BTN_Y        SDL_Scancode::SDL_SCANCODE_V
-#define SW_BTN_L1       SDL_Scancode::SDL_SCANCODE_A 
+#define SW_BTN_L1       SDL_Scancode::SDL_SCANCODE_A
 #define SW_BTN_R1       SDL_Scancode::SDL_SCANCODE_F
 #define SW_BTN_L2       SDL_Scancode::SDL_SCANCODE_S
 #define SW_BTN_R2       SDL_Scancode::SDL_SCANCODE_D

@@ -320,7 +320,7 @@ SDL_Surface *TokenLineScroller::load_scaled_image(const std::filesystem::path &p
     float scale = scale_to_fit_width(img_surface->w);
     image_cache.put_image(
         path,
-        scale != 1 ? 
+        scale != 1 ?
             surface_unique_ptr { zoomSurface(img_surface.get(), scale, scale, 1) } :
             std::move(img_surface)
     );

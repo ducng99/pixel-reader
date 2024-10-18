@@ -127,7 +127,7 @@ public:
             _select_held = false;
         }
     }
-    
+
     bool exit_requested() const
     {
         return _exit_requested;
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
     }
 
     std::cout << "Screen Size: " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << std::endl;
-    
+
     if (const char* db_file = SDL_getenv("SDL_GAMECONTROLLERCONFIG_FILE")) {
         SDL_GameControllerAddMappingsFromFile(db_file);
         std::cout << "Load SDL game controllers mapping file: " << db_file << std::endl;
@@ -181,7 +181,7 @@ int main(int argc, char **argv)
     SDL_ShowCursor(SDL_DISABLE);
     TTF_Init();
     atexit(SDL_Quit);
-    
+
     std::cout << "SDL initialized" << std::endl;
 
     // Surfaces
@@ -191,12 +191,12 @@ int main(int argc, char **argv)
     SDL_Surface *screen = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
     auto sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
     set_render_surface_format(screen->format);
-    
+
     std::cout << "SDL screen set up" << std::endl;
 
     auto config = load_config_with_defaults();
     StateStore state_store(config[CONFIG_KEY_STORE_PATH]);
-    
+
     std::cout << "Loaded configs" << std::endl;
 
     // Preload & check fonts
@@ -211,7 +211,7 @@ int main(int argc, char **argv)
         std::cerr << "Failed to load one or more fonts" << std::endl;
         return 1;
     }
-    
+
     std::cout << "Loaded fonts" << std::endl;
 
     // System styling
@@ -230,7 +230,7 @@ int main(int argc, char **argv)
         settings_set_line_padding(state_store, sys_styling.get_line_padding());
         settings_set_shoulder_keymap(state_store, sys_styling.get_shoulder_keymap());
     });
-    
+
     std::cout << "System stylings" << std::endl;
 
     // View styling
@@ -243,7 +243,7 @@ int main(int argc, char **argv)
         settings_set_show_title_bar(state_store, token_view_styling.get_show_title_bar());
         settings_set_progress_reporting(state_store, token_view_styling.get_progress_reporting());
     });
-    
+
     std::cout << "View stylings" << std::endl;
 
     // Setup views
@@ -268,7 +268,7 @@ int main(int argc, char **argv)
         token_view_styling,
         SYSTEM_FONT
     );
-    
+
     std::cout << "Set up views" << std::endl;
 
     // Track held keys
@@ -289,23 +289,23 @@ int main(int argc, char **argv)
     auto key_held_callback = [&view_stack](SW_BTN_TYPE key, uint32_t held_ms) {
         view_stack.on_keyheld(key, held_ms);
     };
-    
+
     std::cout << "Track held keys" << std::endl;
 
     // Timing
     Timer idle_timer;
     FPSLimiter limit_fps(TARGET_FPS);
     const uint32_t avg_loop_time = 1000 / TARGET_FPS;
-    
+
     std::cout << "Timing ran" << std::endl;
 
     // Initial render
     SDL_SetRenderDrawColor(sdlRenderer, 0, 0, 0, 255);
     SDL_RenderClear(sdlRenderer);
     SDL_RenderPresent(sdlRenderer);
-    
+
     std::cout << "Initial render" << std::endl;
-    
+
     bool ran_user_code = true;
 
     while (!quit)
@@ -406,7 +406,7 @@ int main(int argc, char **argv)
                     break;
             }
         }
-        
+
         quit = quit || chord_tracker.exit_requested();
 
         held_key_tracker.accumulate(avg_loop_time); // Pretend perfect loop timing for event firing consistency
@@ -428,7 +428,7 @@ int main(int argc, char **argv)
                 SDL_RenderCopy(sdlRenderer, sdlTexture, NULL, NULL);
                 SDL_RenderPresent(sdlRenderer);
             }
-            
+
             ran_user_code = false;
         }
 
@@ -453,6 +453,6 @@ int main(int argc, char **argv)
     SDL_DestroyTexture(sdlTexture);
     SDL_DestroyWindow(sdlWindow);
     xmlCleanupParser();
-    
+
     return 0;
 }

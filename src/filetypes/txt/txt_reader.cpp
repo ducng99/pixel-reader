@@ -33,7 +33,7 @@ bool tokenize_text_file(const std::filesystem::path &path, std::vector<std::uniq
         line = strip_whitespace_right(
             convert_tabs_to_space(
                 remove_carriage_returns(line),
-                SPACES_PER_TAB 
+                SPACES_PER_TAB
             )
         );
 

@@ -16,7 +16,7 @@ public:
     virtual ~TaskQueue();
 
     void submit(task_func task);
-    
+
     // Return true if ran tasks
     bool drain();
 };

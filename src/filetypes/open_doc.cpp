@@ -8,7 +8,7 @@
 #include <set>
 #include <string>
 
-namespace 
+namespace
 {
 
 const std::string EPUB_EXT = ".epub";

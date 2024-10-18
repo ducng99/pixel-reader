@@ -44,7 +44,7 @@ public:
     uint32_t get_font_size() const;
     uint32_t get_prev_font_size() const;
     uint32_t get_next_font_size() const;
-    
+
     // Line padding
     void set_line_padding(uint32_t line_padding);
     uint32_t get_line_padding() const;

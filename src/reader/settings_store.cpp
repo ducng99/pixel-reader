@@ -101,7 +101,7 @@ std::optional<uint32_t> settings_get_line_padding(const StateStore &state_store)
     {
         return std::nullopt;
     }
-    
+
     return try_decode_uint(*line_padding);
 }
 

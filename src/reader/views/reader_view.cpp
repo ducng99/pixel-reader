@@ -29,7 +29,7 @@ struct ReaderViewState
     ViewStack &view_stack;
 
     std::unique_ptr<TokenView> token_view;
-    
+
     ReaderViewState(std::filesystem::path path, DocAddr seek_address, std::shared_ptr<DocReader> reader, SystemStyling &sys_styling, TokenViewStyling &token_view_styling, uint32_t token_view_styling_sub_id, ViewStack &view_stack)
         : filename(path.filename()),
           reader(reader),

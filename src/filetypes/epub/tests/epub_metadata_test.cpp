@@ -71,7 +71,7 @@ TEST(EPUB_METADATA, epub_parse_ncx__parses_correct)
         }
     };
 
-    
+
     std::vector<NavPoint> navmap;
     ASSERT_TRUE(epub_parse_ncx("root/toc.ncx", xml, navmap));
     ASSERT_EQ(navmap, expected_navmap);
@@ -125,7 +125,7 @@ TEST(EPUB_METADATA, epub_parse_ncx__ignores_incomplete_navpoints)
             "root/correct.html"
         }
     };
-    
+
     std::vector<NavPoint> navmap;
     ASSERT_TRUE(epub_parse_ncx("root/toc.ncx", xml, navmap));
     ASSERT_EQ(navmap, expected_navmap);

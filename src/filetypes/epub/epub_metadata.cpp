@@ -68,7 +68,7 @@ std::string epub_parse_rootfile_path(const char *container_xml)
     }
 
     xmlFreeDoc(container_doc);
-    
+
     return rootfile_path;
 }
 
