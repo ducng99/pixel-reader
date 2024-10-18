@@ -7,7 +7,7 @@ An ebook reader app for [Rocknix](https://rocknix.org). Supports epub and txt fo
 ![Screenshot](resources/demo.gif)
 
 ### Changes from upstream
-- New `dark_sepia` theme
+- New `dark_olive` theme
 - Customizable line padding
 - Use SDL2
 - Use SDL's game controller support directly (no gptokeyb needed)

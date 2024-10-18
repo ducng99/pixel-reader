@@ -1,7 +1,7 @@
 #ifndef CONFIG_H_
 #define CONFIG_H_
 
-#define GET_ENV(var, defaultValue) ([&]{ \
+#define GET_ENV(var, defaultValue) ([]{ \
     if (const char* v = getenv(var)) { \
         return std::string(v); \
     }; \
@@ -31,7 +31,7 @@
 #define DIALOG_PADDING       25
 #define DIALOG_BORDER_WIDTH  3
 
-#define DEFAULT_COLOR_THEME "dark_sepia"
+#define DEFAULT_COLOR_THEME "dark_olive"
 
 #define CONFIG_FILE_PATH "reader.cfg"
 #define FALLBACK_STORE_PATH DEFAULT_STORAGE + ".pixel_reader_store"

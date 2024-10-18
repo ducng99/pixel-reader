@@ -50,12 +50,12 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
         }
     },
     {
-        "dark_sepia",
+        "dark_olive",
         {
-            {24, 26, 27, 0},       // background
+            {24, 26, 27, 0},    // background
             {209, 205, 199, 0}, // main text
-            {164, 157, 145, 0},    // secondary text
-            {24, 26, 27, 0},  // highlight background
+            {164, 157, 145, 0}, // secondary text
+            {63, 65, 58, 0},    // highlight background
             {118, 232, 115, 0}, // highlight text
         }
     },
