@@ -15,7 +15,7 @@
 #define DEFAULT_STORAGE GET_ENV("STORAGE_PATH", "/storage/.config/pixelreader/")
 
 #define FONT_DIR            DEFAULT_STORAGE + "resources/fonts"
-#define DEFAULT_FONT_NAME   DEFAULT_STORAGE + "resources/fonts/DejaVuSans.ttf"
+#define DEFAULT_FONT_NAME   DEFAULT_STORAGE + "resources/fonts/Literata.ttf"
 #define SYSTEM_FONT         DEFAULT_STORAGE + "resources/fonts/DejaVuSansMono.ttf"
 
 #define MIN_FONT_SIZE      18
