@@ -1,10 +1,10 @@
-#include <iostream>
 #include "./selection_menu.h"
+#include <iostream>
 
-#include "sys/screen.h"
-#include "sys/keymap.h"
 #include "reader/shoulder_keymap.h"
 #include "reader/system_styling.h"
+#include "sys/keymap.h"
+#include "sys/screen.h"
 #include "util/sdl_utils.h"
 
 uint32_t SelectionMenu::num_display_lines() const
@@ -28,19 +28,17 @@ SelectionMenu::SelectionMenu(std::vector<std::string> entries, SystemStyling &st
       styling_sub_id(styling.subscribe_to_changes([this](SystemStyling::ChangeId) {
           needs_render = true;
           int new_line_height = detect_line_height(
-              this->styling.get_font_name(),
-              this->styling.get_font_size()
-          ) + line_padding;
+                                    this->styling.get_font_name(),
+                                    this->styling.get_font_size()
+                                ) +
+                                line_padding;
           if (new_line_height != line_height)
           {
               line_height = new_line_height;
               set_cursor_pos(cursor_pos);
           }
       })),
-      line_height(detect_line_height(
-          styling.get_font_name(),
-          styling.get_font_size()
-      ) + line_padding),
+      line_height(detect_line_height(styling.get_font_name(), styling.get_font_size()) + line_padding),
       scroll_throttle(250, 100)
 {
 }
@@ -120,7 +118,7 @@ void SelectionMenu::close()
     _is_done = true;
 }
 
-bool SelectionMenu::render(SDL_Surface *dest_surface, bool force_render)
+bool SelectionMenu::render(SDL_Surface* dest_surface, bool force_render)
 {
     if (!needs_render && !force_render)
     {
@@ -128,9 +126,9 @@ bool SelectionMenu::render(SDL_Surface *dest_surface, bool force_render)
     }
     needs_render = false;
 
-    TTF_Font *loaded_font = styling.get_loaded_font();
+    TTF_Font* loaded_font = styling.get_loaded_font();
 
-    const SDL_PixelFormat *pixel_format = dest_surface->format;
+    const SDL_PixelFormat* pixel_format = dest_surface->format;
 
     const auto &theme = styling.get_loaded_color_theme();
     const SDL_Color &fg_color = theme.main_text;
@@ -176,12 +174,14 @@ bool SelectionMenu::render(SDL_Surface *dest_surface, bool force_render)
                 static_cast<Sint16>(y + line_padding / 2),
                 0, 0
             };
-            auto message = surface_unique_ptr { TTF_RenderUTF8_Shaded(
-                loaded_font,
-                entry.c_str(),
-                is_highlighted ? hl_text_color : fg_color,
-                is_highlighted ? hl_bg_color : bg_color
-            ) };
+            auto message = surface_unique_ptr{
+                TTF_RenderUTF8_Shaded(
+                    loaded_font,
+                    entry.c_str(),
+                    is_highlighted ? hl_text_color : fg_color,
+                    is_highlighted ? hl_bg_color : bg_color
+                )
+            };
             SDL_BlitSurface(message.get(), NULL, dest_surface, &rectMessage);
         }
 
@@ -249,7 +249,8 @@ void SelectionMenu::on_select_entry()
 
 void SelectionMenu::on_keypress(SW_BTN_TYPE key)
 {
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_UP:
             on_move_up(1);
             break;
@@ -260,20 +261,20 @@ void SelectionMenu::on_keypress(SW_BTN_TYPE key)
         case SW_BTN_R1:
         case SW_BTN_L2:
         case SW_BTN_R2:
-            {
-                auto [l_key, r_key] = get_shoulder_keymap_lr(
-                    styling.get_shoulder_keymap()
-                );
+        {
+            auto [l_key, r_key] = get_shoulder_keymap_lr(
+                styling.get_shoulder_keymap()
+            );
 
-                if (key == l_key)
-                {
-                    key = SW_BTN_LEFT;
-                }
-                else if (key == r_key)
-                {
-                    key = SW_BTN_RIGHT;
-                }
+            if (key == l_key)
+            {
+                key = SW_BTN_LEFT;
             }
+            else if (key == r_key)
+            {
+                key = SW_BTN_RIGHT;
+            }
+        }
             // fallthrough
         case SW_BTN_LEFT:
         case SW_BTN_RIGHT:
@@ -303,7 +304,8 @@ void SelectionMenu::on_keypress(SW_BTN_TYPE key)
 
 void SelectionMenu::on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms)
 {
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_UP:
         case SW_BTN_DOWN:
         case SW_BTN_LEFT:

@@ -26,9 +26,10 @@ struct FSState
     }
 };
 
-namespace {
+namespace
+{
 
-void refresh_path_entries(FSState *s)
+void refresh_path_entries(FSState* s)
 {
     s->path_entries.clear();
     if (s->path.has_parent_path() && s->path != s->path.root_path())
@@ -36,8 +37,10 @@ void refresh_path_entries(FSState *s)
         s->path_entries.push_back(FSEntry::directory(".."));
     }
 
-    for (const auto &entry : directory_listing(s->path)) {
-        if (entry.is_dir || file_type_is_supported(entry.name)) {
+    for (const auto &entry : directory_listing(s->path))
+    {
+        if (entry.is_dir || file_type_is_supported(entry.name))
+        {
             s->path_entries.push_back(entry);
         }
     }
@@ -50,7 +53,7 @@ void refresh_path_entries(FSState *s)
     s->menu.set_entries(menu_entries);
 }
 
-void on_menu_entry_selected(FSState *s, uint32_t menu_index)
+void on_menu_entry_selected(FSState* s, uint32_t menu_index)
 {
     if (s->path_entries.empty())
     {
@@ -85,7 +88,7 @@ void on_menu_entry_selected(FSState *s, uint32_t menu_index)
     }
 }
 
-void on_menu_entry_focused(FSState *s, uint32_t menu_index)
+void on_menu_entry_focused(FSState* s, uint32_t menu_index)
 {
     if (!s->path_entries.empty() && s->on_file_focus)
     {
@@ -125,10 +128,7 @@ std::filesystem::path sanitize_starting_path(std::filesystem::path path)
 } // namespace
 
 FileSelector::FileSelector(std::filesystem::path path, SystemStyling &styling)
-    : state(std::make_unique<FSState>(
-          sanitize_starting_path(path),
-          styling
-      ))
+    : state(std::make_unique<FSState>(sanitize_starting_path(path), styling))
 {
     state->menu.set_on_selection([this](uint32_t menu_index) {
         on_menu_entry_selected(this->state.get(), menu_index);
@@ -153,7 +153,7 @@ FileSelector::~FileSelector()
 {
 }
 
-bool FileSelector::render(SDL_Surface *dest_surface, bool force_render)
+bool FileSelector::render(SDL_Surface* dest_surface, bool force_render)
 {
     return state->menu.render(dest_surface, force_render);
 }

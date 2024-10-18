@@ -9,7 +9,7 @@ ViewStack::~ViewStack()
 {
 }
 
-bool ViewStack::render(SDL_Surface *dest, bool force_render)
+bool ViewStack::render(SDL_Surface* dest, bool force_render)
 {
     bool rendered = false;
     if (!views.empty())

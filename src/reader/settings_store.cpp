@@ -8,13 +8,13 @@
 namespace
 {
 
-constexpr const char *SETTINGS_KEY_SHOW_TITLE_BAR = "show_title_bar";
-constexpr const char *SETTINGS_SHOULDER_KEYMAP = "shoulder_keymap";
-constexpr const char *SETTINGS_KEY_COLOR_THEME = "color_theme";
-constexpr const char *SETTINGS_KEY_FONT_NAME = "font_name";
-constexpr const char *SETTINGS_KEY_FONT_SIZE = "font_size";
-constexpr const char *SETTINGS_KEY_LINE_PADDING = "line_padding";
-constexpr const char *SETTINGS_PROGRESS_REPORTING = "progress_reporting";
+constexpr const char* SETTINGS_KEY_SHOW_TITLE_BAR = "show_title_bar";
+constexpr const char* SETTINGS_SHOULDER_KEYMAP = "shoulder_keymap";
+constexpr const char* SETTINGS_KEY_COLOR_THEME = "color_theme";
+constexpr const char* SETTINGS_KEY_FONT_NAME = "font_name";
+constexpr const char* SETTINGS_KEY_FONT_SIZE = "font_size";
+constexpr const char* SETTINGS_KEY_LINE_PADDING = "line_padding";
+constexpr const char* SETTINGS_PROGRESS_REPORTING = "progress_reporting";
 
 } // namespace
 

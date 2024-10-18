@@ -52,7 +52,7 @@ float scale_to_fit_width(int w)
 
 std::vector<std::unique_ptr<DisplayLine>> TokenLineScroller::image_to_display_lines(const ImageDocToken &token)
 {
-    SDL_Surface *image = load_scaled_image(token.path);
+    SDL_Surface* image = load_scaled_image(token.path);
 
     std::vector<std::unique_ptr<DisplayLine>> lines;
     if (image && image->h)
@@ -74,7 +74,6 @@ std::vector<std::unique_ptr<DisplayLine>> TokenLineScroller::image_to_display_li
     return lines;
 }
 
-
 std::vector<std::unique_ptr<DisplayLine>> TokenLineScroller::render_display_lines(const DocToken &token)
 {
     if (token.type == TokenType::Image)
@@ -94,10 +93,7 @@ std::vector<std::unique_ptr<DisplayLine>> TokenLineScroller::render_display_line
         {
             const ListItemDocToken &list_token = static_cast<const ListItemDocToken &>(token);
             int nest_level = list_token.nest_level;
-            std::string prefix = std::string(
-                (nest_level > 1 ? nest_level - 1 : 0) * 2,
-                ' '
-            ) + BULLET + " ";
+            std::string prefix = std::string((nest_level > 1 ? nest_level - 1 : 0) * 2, ' ') + BULLET + " ";
             text = prefix + list_token.text;
             extra_text_width = get_address_width(prefix);
         }
@@ -112,7 +108,7 @@ std::vector<std::unique_ptr<DisplayLine>> TokenLineScroller::render_display_line
 
         DocAddr address = token.address;
         std::vector<std::unique_ptr<DisplayLine>> lines;
-        wrap_lines(text.c_str(), line_fits, [type=token.type, &lines, &address, extra_text_width](const char *str, uint32_t len) {
+        wrap_lines(text.c_str(), line_fits, [type = token.type, &lines, &address, extra_text_width](const char* str, uint32_t len) {
             std::string line_text(str, len);
             bool centered = type == TokenType::Header;
 
@@ -135,7 +131,7 @@ void TokenLineScroller::get_more_lines_forward(uint32_t num_lines)
 {
     while (num_lines > 0)
     {
-        const DocToken *token = forward_it->read(1);
+        const DocToken* token = forward_it->read(1);
         if (!token)
         {
             global_end_line = lines_buf.end_index();
@@ -157,7 +153,7 @@ void TokenLineScroller::get_more_lines_backward(uint32_t num_lines)
 {
     while (num_lines > 0)
     {
-        const DocToken *token = backward_it->read(-1);
+        const DocToken* token = backward_it->read(-1);
         if (!token)
         {
             global_first_line = lines_buf.start_index();
@@ -198,13 +194,14 @@ void TokenLineScroller::initialize_buffer_at(DocAddr address)
 TokenLineScroller::TokenLineScroller(
     const std::shared_ptr<DocReader> reader,
     DocAddr address,
-    std::function<bool(const char *, uint32_t)> line_fits,
+    std::function<bool(const char*, uint32_t)> line_fits,
     uint32_t line_height_pixels
-) : reader(reader),
-    forward_it(nullptr),
-    backward_it(nullptr),
-    line_fits(line_fits),
-    line_height_pixels(line_height_pixels)
+)
+    : reader(reader),
+      forward_it(nullptr),
+      backward_it(nullptr),
+      line_fits(line_fits),
+      line_height_pixels(line_height_pixels)
 {
     initialize_buffer_at(address);
 }
@@ -224,7 +221,7 @@ void TokenLineScroller::materialize_line(int line_num)
     }
 }
 
-const DisplayLine *TokenLineScroller::get_line_relative(int offset)
+const DisplayLine* TokenLineScroller::get_line_relative(int offset)
 {
     int line = current_line + offset;
     materialize_line(line);
@@ -254,7 +251,7 @@ void TokenLineScroller::seek_to_address(DocAddr address)
 
 void TokenLineScroller::reset_buffer()
 {
-    const DisplayLine *line = get_line_relative(0);
+    const DisplayLine* line = get_line_relative(0);
     if (line)
     {
         DocAddr cur_address = line->address;
@@ -278,10 +275,10 @@ std::optional<int> TokenLineScroller::end_line_number() const
     return global_end_line;
 }
 
-SDL_Surface *TokenLineScroller::load_scaled_image(const std::filesystem::path &path)
+SDL_Surface* TokenLineScroller::load_scaled_image(const std::filesystem::path &path)
 {
     {
-        SDL_Surface *image = image_cache.get_image(path);
+        SDL_Surface* image = image_cache.get_image(path);
         if (image)
         {
             return image;
@@ -320,9 +317,9 @@ SDL_Surface *TokenLineScroller::load_scaled_image(const std::filesystem::path &p
     float scale = scale_to_fit_width(img_surface->w);
     image_cache.put_image(
         path,
-        scale != 1 ?
-            surface_unique_ptr { zoomSurface(img_surface.get(), scale, scale, 1) } :
-            std::move(img_surface)
+        scale != 1
+            ? surface_unique_ptr{zoomSurface(img_surface.get(), scale, scale, 1)}
+            : std::move(img_surface)
     );
 
     return image_cache.get_image(path);

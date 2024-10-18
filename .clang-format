@@ -1,0 +1,16 @@
+Standard: c++17
+BasedOnStyle: Microsoft
+ColumnLimit: 0
+IndentCaseLabels: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterCaseLabel: true
+  SplitEmptyFunction: false
+  SplitEmptyRecord: false
+  SplitEmptyNamespace: false
+AlignConsecutiveMacros: Consecutive
+AlignAfterOpenBracket: BlockIndent
+PointerAlignment: Left
+ReferenceAlignment: Right
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeTernaryOperators: true

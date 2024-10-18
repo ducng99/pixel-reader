@@ -9,7 +9,8 @@ struct StateStore;
 class SSDocReaderCache : public DocReaderCache
 {
     StateStore &store;
-public:
+
+  public:
     SSDocReaderCache(StateStore &store);
 
     std::optional<std::string> read(const std::string &book_id, const std::string &key) const override;

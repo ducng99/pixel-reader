@@ -10,7 +10,8 @@
 
 using string_unordered_map = std::unordered_map<std::string, std::string>;
 
-class StateStore {
+class StateStore
+{
     mutable bool activity_dirty = false;
     mutable bool settings_dirty = false;
 
@@ -31,7 +32,7 @@ class StateStore {
     std::filesystem::path settings_store_path;
     string_unordered_map settings;
 
-public:
+  public:
     StateStore(std::filesystem::path base_dir);
     virtual ~StateStore();
 

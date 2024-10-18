@@ -17,7 +17,7 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
             {96, 96, 96, 0},    // secondary text
             {150, 38, 200, 0},  // highlight background
             {240, 240, 240, 0}, // highlight text
-        }
+        },
     },
     {
         "light_contrast",
@@ -27,17 +27,17 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
             {160, 160, 160, 0}, // secondary text
             {163, 81, 200, 0},  // highlight background
             {250, 250, 250, 0}, // highlight text
-        }
+        },
     },
     {
         "light_sepia",
         {
             {250, 240, 220, 0}, // background
-            {0, 0, 0, 0},    // main text
+            {0, 0, 0, 0},       // main text
             {160, 160, 160, 0}, // secondary text
             {163, 81, 200, 0},  // highlight background
             {250, 240, 220, 0}, // highlight text
-        }
+        },
     },
     {
         "vampire",
@@ -47,7 +47,7 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
             {96, 0, 0, 0},  // secondary text
             {192, 0, 0, 0}, // highlight background
             {0, 0, 0, 0},   // highlight text
-        }
+        },
     },
     {
         "dark_olive",
@@ -57,7 +57,7 @@ const std::vector<std::pair<std::string, ColorTheme>> theme_defs = {
             {164, 157, 145, 0}, // secondary text
             {63, 65, 58, 0},    // highlight background
             {118, 232, 115, 0}, // highlight text
-        }
+        },
     },
 };
 
@@ -76,7 +76,7 @@ int get_theme_index(const std::string &name)
 
 } // namespace
 
-const ColorTheme& get_color_theme(const std::string &name)
+const ColorTheme &get_color_theme(const std::string &name)
 {
     int i = get_theme_index(name);
     if (i < 0)
@@ -109,9 +109,7 @@ std::string get_prev_theme(const std::string &name)
         return theme_defs[0].first;
     }
 
-    return theme_defs[
-        (i - 1 + theme_defs.size()) % theme_defs.size()
-    ].first;
+    return theme_defs[(i - 1 + theme_defs.size()) % theme_defs.size()].first;
 }
 
 std::string get_next_theme(const std::string &name)
@@ -122,7 +120,5 @@ std::string get_next_theme(const std::string &name)
         return theme_defs[0].first;
     }
 
-    return theme_defs[
-        (i + 1) % theme_defs.size()
-    ].first;
+    return theme_defs[(i + 1) % theme_defs.size()].first;
 }

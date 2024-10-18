@@ -13,20 +13,21 @@
 #include "util/sdl_font_cache.h"
 #include "util/sdl_utils.h"
 
-#include <filesystem>
 #include <algorithm>
+#include <filesystem>
 
 SettingsView::SettingsView(
     SystemStyling &sys_styling,
     TokenViewStyling &token_view_styling,
     std::string font_name
-) : font_name(font_name),
-    sys_styling(sys_styling),
-    token_view_styling(token_view_styling),
-    styling_sub_id(sys_styling.subscribe_to_changes([this](SystemStyling::ChangeId) {
-        needs_render = true;
-    })),
-    num_menu_items(5)
+)
+    : font_name(font_name),
+      sys_styling(sys_styling),
+      token_view_styling(token_view_styling),
+      styling_sub_id(sys_styling.subscribe_to_changes([this](SystemStyling::ChangeId) {
+          needs_render = true;
+      })),
+      num_menu_items(5)
 {
 }
 
@@ -35,29 +36,29 @@ SettingsView::~SettingsView()
     sys_styling.unsubscribe_from_changes(styling_sub_id);
 }
 
-bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
+bool SettingsView::render(SDL_Surface* dest_surface, bool force_render)
 {
     if (needs_render || force_render)
     {
-        TTF_Font *sys_font = cached_load_font(font_name, sys_styling.get_font_size());
-        TTF_Font *user_font = sys_styling.get_loaded_font();
+        TTF_Font* sys_font = cached_load_font(font_name, sys_styling.get_font_size());
+        TTF_Font* user_font = sys_styling.get_loaded_font();
         const auto &theme = sys_styling.get_loaded_color_theme();
 
         constexpr int style_normal = 0;
         constexpr int style_hl = 1;
         constexpr int style_label = 2;
 
-        auto render_text = [&](const char *str, int style, TTF_Font *font = nullptr) {
-            return surface_unique_ptr { TTF_RenderUTF8_Shaded(
+        auto render_text = [&](const char* str, int style, TTF_Font* font = nullptr) {
+            return surface_unique_ptr{TTF_RenderUTF8_Shaded(
                 font ? font : sys_font,
                 str,
-                style == style_normal ?
-                    theme.main_text :
-                    (style == style_hl ? theme.highlight_text : theme.secondary_text),
-                style == style_normal ?
-                    theme.background :
-                    (style == style_hl ? theme.highlight_background : theme.background)
-            ) };
+                style == style_normal
+                    ? theme.main_text
+                    : (style == style_hl ? theme.highlight_text : theme.secondary_text),
+                style == style_normal
+                    ? theme.background
+                    : (style == style_hl ? theme.highlight_background : theme.background)
+            )};
         };
 
         auto left_arrow = render_text("◂", style_hl);
@@ -90,24 +91,22 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
 
         auto shoulder_keymap_label = render_text("Shoulder keymap:", style_label);
         auto shoulder_keymap_value = render_text(
-            get_shoulder_keymap_display_name(
-                sys_styling.get_shoulder_keymap()
-            ).c_str(),
+            get_shoulder_keymap_display_name(sys_styling.get_shoulder_keymap()).c_str(),
             line_selected == 4 ? style_hl : style_normal
         );
 
         auto progress_label = render_text("Progress:", style_label);
         auto progress_value = render_text(
-            token_view_styling.get_progress_reporting() == ProgressReporting::CHAPTER_PERCENT ?
-            "Chapter %" :
-            "Book %",
+            token_view_styling.get_progress_reporting() == ProgressReporting::CHAPTER_PERCENT
+                ? "Chapter %"
+                : "Book %",
             line_selected == 5 ? style_hl : style_normal
         );
 
         Uint16 content_w;
         {
             int arrow_w = left_arrow->w + right_arrow->w;
-            std::vector<int> widths {
+            std::vector<int> widths{
                 theme_label->w,
                 theme_value->w + arrow_w,
                 font_size_label->w,
@@ -160,7 +159,7 @@ bool SettingsView::render(SDL_Surface *dest_surface, bool force_render)
         // draw text
         {
             SDL_Rect rect = {0, content_y, 0, 0};
-            auto push_text = [&](SDL_Surface *surf, bool add_arrows = false) {
+            auto push_text = [&](SDL_Surface* surf, bool add_arrows = false) {
                 Sint16 start = SCREEN_WIDTH / 2 - surf->w / 2;
 
                 rect.x = start;
@@ -248,27 +247,21 @@ void SettingsView::on_change_theme(int dir)
 {
     std::string theme = sys_styling.get_color_theme();
     sys_styling.set_color_theme(
-        (dir < 0) ?
-            get_prev_theme(theme) :
-            get_next_theme(theme)
+        (dir < 0) ? get_prev_theme(theme) : get_next_theme(theme)
     );
 }
 
 void SettingsView::on_change_font_size(int dir)
 {
     sys_styling.set_font_size(
-        (dir < 0) ?
-            sys_styling.get_prev_font_size() :
-            sys_styling.get_next_font_size()
+        (dir < 0) ? sys_styling.get_prev_font_size() : sys_styling.get_next_font_size()
     );
 }
 
 void SettingsView::on_change_line_padding(int dir)
 {
     sys_styling.set_line_padding(
-        (dir < 0) ?
-            sys_styling.get_prev_line_padding() :
-            sys_styling.get_next_line_padding()
+        (dir < 0) ? sys_styling.get_prev_line_padding() : sys_styling.get_next_line_padding()
     );
 }
 
@@ -276,9 +269,7 @@ void SettingsView::on_change_font_name(int dir)
 {
     std::string font_name = sys_styling.get_font_name();
     sys_styling.set_font_name(
-        (dir < 0) ?
-            get_prev_font_name(font_name) :
-            get_next_font_name(font_name)
+        (dir < 0) ? get_prev_font_name(font_name) : get_next_font_name(font_name)
     );
 }
 
@@ -286,9 +277,7 @@ void SettingsView::on_change_shoulder_keymap(int dir)
 {
     const auto &keymap = sys_styling.get_shoulder_keymap();
     sys_styling.set_shoulder_keymap(
-        (dir < 0) ?
-            get_prev_shoulder_keymap(keymap) :
-            get_next_shoulder_keymap(keymap)
+        (dir < 0) ? get_prev_shoulder_keymap(keymap) : get_next_shoulder_keymap(keymap)
     );
 }
 
@@ -301,7 +290,8 @@ void SettingsView::on_change_progress()
 
 void SettingsView::on_keypress(SW_BTN_TYPE key)
 {
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_UP:
             line_selected = (line_selected + num_menu_items - 1) % num_menu_items;
             needs_render = true;
@@ -312,40 +302,40 @@ void SettingsView::on_keypress(SW_BTN_TYPE key)
             break;
         case SW_BTN_LEFT:
         case SW_BTN_RIGHT:
+        {
+            int dir = (key == SW_BTN_LEFT) ? -1 : 1;
+            if (line_selected == 0)
             {
-                int dir = (key == SW_BTN_LEFT) ? -1 : 1;
-                if (line_selected == 0)
-                {
-                    on_change_theme(dir);
-                }
-                else if (line_selected == 1)
-                {
-                    on_change_font_size(dir);
-                }
-                else if (line_selected == 2)
-                {
-                    on_change_line_padding(dir);
-                }
-                else if (line_selected == 3)
-                {
-                    on_change_font_name(dir);
-                }
-                else if (line_selected == 4)
-                {
-                    on_change_shoulder_keymap(dir);
-                }
-                else
-                {
-                    on_change_progress();
-                }
-                needs_render = true;
+                on_change_theme(dir);
             }
-            break;
+            else if (line_selected == 1)
+            {
+                on_change_font_size(dir);
+            }
+            else if (line_selected == 2)
+            {
+                on_change_line_padding(dir);
+            }
+            else if (line_selected == 3)
+            {
+                on_change_font_name(dir);
+            }
+            else if (line_selected == 4)
+            {
+                on_change_shoulder_keymap(dir);
+            }
+            else
+            {
+                on_change_progress();
+            }
+            needs_render = true;
+        }
+        break;
         case SW_BTN_B:
-            {
-                _is_done = true;
-            }
-            break;
+        {
+            _is_done = true;
+        }
+        break;
         default:
             break;
     }

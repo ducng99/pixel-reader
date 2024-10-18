@@ -14,13 +14,13 @@ struct SystemStyling;
 struct TokenViewStyling;
 struct ViewStack;
 
-class ReaderView: public View
+class ReaderView : public View
 {
     std::unique_ptr<ReaderViewState> state;
 
     void update_token_view_title(DocAddr address);
 
-public:
+  public:
     ReaderView(
         std::filesystem::path path,
         std::shared_ptr<DocReader> reader,
@@ -33,7 +33,7 @@ public:
     ReaderView &operator=(const ReaderView &) = delete;
     virtual ~ReaderView();
 
-    bool render(SDL_Surface *dest_surface, bool force_render) override;
+    bool render(SDL_Surface* dest_surface, bool force_render) override;
     bool is_done() override;
 
     void on_keypress(SW_BTN_TYPE key) override;

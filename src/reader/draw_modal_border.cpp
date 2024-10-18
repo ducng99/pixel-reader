@@ -1,28 +1,28 @@
 #include "./draw_modal_border.h"
 
+#include "./config.h"
 #include "sys/screen.h"
 #include "util/sdl_pointer.h"
-#include "./config.h"
 
-void draw_modal_border(uint32_t w, uint32_t h, const ColorTheme &theme, SDL_Surface *dest_surface)
+void draw_modal_border(uint32_t w, uint32_t h, const ColorTheme &theme, SDL_Surface* dest_surface)
 {
     w += DIALOG_PADDING * 2;
     h += DIALOG_PADDING * 2;
 
     // transparent background
     {
-        surface_unique_ptr mask = surface_unique_ptr {
+        surface_unique_ptr mask = surface_unique_ptr{
             SDL_CreateRGBSurface(
                 SDL_SWSURFACE,
                 SCREEN_WIDTH,
                 SCREEN_HEIGHT,
                 32,
                 0, 0, 0, 0
-            )
+            ),
         };
         SDL_SetSurfaceAlphaMod(mask.get(), 128);
 
-        SDL_Rect rect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT };
+        SDL_Rect rect = {0, 0, SCREEN_WIDTH, SCREEN_HEIGHT};
         SDL_FillRect(
             mask.get(),
             &rect,

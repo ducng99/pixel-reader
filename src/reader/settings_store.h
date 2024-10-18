@@ -3,9 +3,9 @@
 
 #include "./reader/progress_reporting.h"
 
+#include <cstdint>
 #include <optional>
 #include <string>
-#include <cstdint>
 
 struct StateStore;
 

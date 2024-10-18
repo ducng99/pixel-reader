@@ -1,10 +1,10 @@
 #ifndef SHOULDER_KEYMAP_H_
 #define SHOULDER_KEYMAP_H_
 
-#include <string>
-#include <cstdint>
-#include <SDL2/SDL_gamecontroller.h>
 #include "sys/keymap.h"
+#include <SDL2/SDL_gamecontroller.h>
+#include <cstdint>
+#include <string>
 
 std::string get_valid_shoulder_keymap(const std::string &keymap);
 std::string get_prev_shoulder_keymap(const std::string &keymap);

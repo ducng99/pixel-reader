@@ -6,15 +6,16 @@
 #include <memory>
 #include <vector>
 
-class ViewStack: public View
+class ViewStack : public View
 {
     std::vector<std::shared_ptr<View>> views;
     std::weak_ptr<View> last_top_view;
-public:
+
+  public:
     void push(std::shared_ptr<View> view);
     virtual ~ViewStack();
 
-    bool render(SDL_Surface *dest, bool force_render) override;
+    bool render(SDL_Surface* dest, bool force_render) override;
     bool is_done() override;
 
     void on_keypress(SW_BTN_TYPE key) override;

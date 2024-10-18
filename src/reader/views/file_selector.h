@@ -5,24 +5,24 @@
 
 #include <SDL2/SDL_video.h>
 
-#include <functional>
 #include <filesystem>
+#include <functional>
 #include <memory>
 #include <string>
 
 struct FSState;
 struct SystemStyling;
 
-class FileSelector: public View
+class FileSelector : public View
 {
     std::unique_ptr<FSState> state;
 
-public:
+  public:
     // Expects to receive a path to a file, or directory with trailing separator.
     FileSelector(std::filesystem::path path, SystemStyling &styling);
     virtual ~FileSelector();
 
-    bool render(SDL_Surface *dest_surface, bool force_render) override;
+    bool render(SDL_Surface* dest_surface, bool force_render) override;
     bool is_done() override;
     void on_keypress(SW_BTN_TYPE key) override;
     void on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms) override;

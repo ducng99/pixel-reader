@@ -8,7 +8,7 @@
 struct SystemStyling;
 struct TokenViewStyling;
 
-class SettingsView: public View
+class SettingsView : public View
 {
     bool _is_done = false;
     bool needs_render = true;
@@ -29,7 +29,7 @@ class SettingsView: public View
     void on_change_shoulder_keymap(int dir);
     void on_change_progress();
 
-public:
+  public:
     SettingsView(
         SystemStyling &sys_styling,
         TokenViewStyling &token_view_styling,
@@ -37,7 +37,7 @@ public:
     );
     virtual ~SettingsView();
 
-    bool render(SDL_Surface *dest, bool force_render) override;
+    bool render(SDL_Surface* dest, bool force_render) override;
     bool is_done() override;
     bool is_modal() override;
     void on_keypress(SW_BTN_TYPE key) override;

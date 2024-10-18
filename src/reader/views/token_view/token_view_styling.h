@@ -14,7 +14,7 @@ class TokenViewStyling
     std::unique_ptr<TokenViewStylingState> state;
     void notify_subscribers() const;
 
-public:
+  public:
     TokenViewStyling(bool show_title_bar, ProgressReporting progress_reporting);
     virtual ~TokenViewStyling();
 

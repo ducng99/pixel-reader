@@ -3,7 +3,7 @@
 #include <stdexcept>
 
 #define PROGRESS_STR_CHAPTER_PERCENT "chapter"
-#define PROGRESS_STR_GLOBAL_PERCENT "global"
+#define PROGRESS_STR_GLOBAL_PERCENT  "global"
 
 ProgressReporting get_next_progress_reporting(ProgressReporting progress_reporting)
 {

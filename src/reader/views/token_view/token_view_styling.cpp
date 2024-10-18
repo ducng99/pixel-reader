@@ -26,7 +26,7 @@ TokenViewStyling::~TokenViewStyling()
 
 void TokenViewStyling::notify_subscribers() const
 {
-    for (auto &sub: state->subscribers)
+    for (auto &sub : state->subscribers)
     {
         sub.second();
     }

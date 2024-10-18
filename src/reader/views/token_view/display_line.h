@@ -21,16 +21,16 @@ struct DisplayLine
     virtual ~DisplayLine() = default;
 };
 
-struct TextLine: public DisplayLine
+struct TextLine : public DisplayLine
 {
     std::string text;
     bool centered;
 
-    TextLine(DocAddr addr, const std::string& text, bool centered = false);
+    TextLine(DocAddr addr, const std::string &text, bool centered = false);
     virtual ~TextLine() = default;
 };
 
-struct ImageLine: public DisplayLine
+struct ImageLine : public DisplayLine
 {
     std::filesystem::path image_path;
     uint32_t num_lines;
@@ -38,7 +38,7 @@ struct ImageLine: public DisplayLine
 
     ImageLine(
         DocAddr addr,
-        const std::filesystem::path& image_path,
+        const std::filesystem::path &image_path,
         uint32_t num_lines,
         uint32_t width,
         uint32_t height
@@ -46,9 +46,8 @@ struct ImageLine: public DisplayLine
     virtual ~ImageLine() = default;
 };
 
-
 // Reference to an image starting on previous line
-struct ImageRefLine: public DisplayLine
+struct ImageRefLine : public DisplayLine
 {
     uint32_t offset;
 

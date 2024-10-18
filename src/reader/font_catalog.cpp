@@ -11,8 +11,6 @@
 namespace
 {
 
-const std::vector<std::filesystem::path> EXTRA_FONTS = EXTRA_FONTS_LIST;
-
 std::vector<std::string> available_fonts;
 
 void discover_fonts()
@@ -27,25 +25,13 @@ void discover_fonts()
         return std::filesystem::exists(file_path) && (norm_ext == ".ttf" || norm_ext == ".ttc");
     };
 
-    for (const auto &entry: directory_listing(FONT_DIR))
+    for (const auto &entry : directory_listing(FONT_DIR))
     {
         std::filesystem::path path = std::filesystem::path(FONT_DIR) / entry.name;
         if (!entry.is_dir && test_font(path))
         {
             std::cout << "Added font: " << path.string() << std::endl;
             available_fonts.push_back(path.string());
-        }
-    }
-
-    for (const auto &path: EXTRA_FONTS)
-    {
-        if (test_font(path))
-        {
-            available_fonts.push_back(path.string());
-        }
-        else
-        {
-            std::cerr << "Skipping extra font: " << path.string() << std::endl;
         }
     }
 
@@ -95,4 +81,3 @@ std::string get_next_font_name(const std::string &font_name)
     int i = get_font_index(font_name);
     return available_fonts[(i + 1) % available_fonts.size()];
 }
-

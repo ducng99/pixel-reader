@@ -1,7 +1,8 @@
 #include "./ss_doc_reader_cache.h"
 #include "./state_store.h"
 
-SSDocReaderCache::SSDocReaderCache(StateStore &store): store(store)
+SSDocReaderCache::SSDocReaderCache(StateStore &store)
+    : store(store)
 {
 }
 

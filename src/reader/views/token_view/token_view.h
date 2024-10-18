@@ -1,8 +1,8 @@
 #ifndef TOKEN_VIEW_H_
 #define TOKEN_VIEW_H_
 
-#include "reader/view.h"
 #include "doc_api/doc_addr.h"
+#include "reader/view.h"
 
 #include <functional>
 #include <memory>
@@ -14,13 +14,13 @@ struct SystemStyling;
 struct TokenViewState;
 struct TokenViewStyling;
 
-class TokenView: public View
+class TokenView : public View
 {
     std::unique_ptr<TokenViewState> state;
 
     void scroll(int num_lines);
 
-public:
+  public:
     TokenView(
         std::shared_ptr<DocReader> reader,
         DocAddr address,
@@ -29,7 +29,7 @@ public:
     );
     virtual ~TokenView();
 
-    bool render(SDL_Surface *dest_surface, bool force_render) override;
+    bool render(SDL_Surface* dest_surface, bool force_render) override;
     bool is_done() override;
     void on_keypress(SW_BTN_TYPE key) override;
     void on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms) override;

@@ -1,10 +1,10 @@
+#include "./color_theme_def.h"
 #include "./config.h"
 #include "./font_catalog.h"
 #include "./settings_store.h"
 #include "./shoulder_keymap.h"
 #include "./state_store.h"
 #include "./system_styling.h"
-#include "./color_theme_def.h"
 #include "./view_stack.h"
 #include "./views/file_selector.h"
 #include "./views/reader_bootstrap_view.h"
@@ -21,8 +21,8 @@
 #include "util/task_queue.h"
 #include "util/timer.h"
 
-#include <libxml/parser.h>
 #include <SDL2/SDL.h>
+#include <libxml/parser.h>
 
 #include <csignal>
 #include <iostream>
@@ -58,7 +58,7 @@ void initialize_views(
                 token_view_styling,
                 view_stack,
                 state_store,
-                [&task_queue](task_func task){ task_queue.submit(task); }
+                [&task_queue](task_func task) { task_queue.submit(task); }
             )
         );
     };
@@ -97,8 +97,7 @@ class SystemKeyChordTracker
     bool _select_held = false;
     bool _exit_requested = false;
 
-public:
-
+  public:
     // Report keypress event. Return filtered key code.
     SW_BTN_TYPE on_keypress(SW_BTN_TYPE key)
     {
@@ -111,7 +110,8 @@ public:
         }
         else if (key == SW_BTN_START)
         {
-            if (_select_held) {
+            if (_select_held)
+            {
                 _exit_requested = true;
             }
         }
@@ -141,7 +141,7 @@ void signal_handler(int)
     quit = true;
 }
 
-const char *CONFIG_KEY_STORE_PATH = "store_path";
+const char* CONFIG_KEY_STORE_PATH = "store_path";
 
 std::unordered_map<std::string, std::string> load_config_with_defaults()
 {
@@ -152,18 +152,20 @@ std::unordered_map<std::string, std::string> load_config_with_defaults()
 
 } // namespace
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
     signal(SIGINT, signal_handler);
     signal(SIGTERM, signal_handler);
 
-    if (char* env_screen_width = SDL_getenv("SCREEN_WIDTH")) {
+    if (char* env_screen_width = SDL_getenv("SCREEN_WIDTH"))
+    {
         int new_width = atoi(env_screen_width);
         if (100 < new_width && new_width < 4096)
             SCREEN_WIDTH = static_cast<unsigned int>(new_width);
     }
 
-    if (char* env_screen_height = SDL_getenv("SCREEN_HEIGHT")) {
+    if (char* env_screen_height = SDL_getenv("SCREEN_HEIGHT"))
+    {
         int new_height = atoi(env_screen_height);
         if (100 < new_height && new_height < 4096)
             SCREEN_HEIGHT = static_cast<unsigned int>(new_height);
@@ -171,7 +173,8 @@ int main(int argc, char **argv)
 
     std::cout << "Screen Size: " << SCREEN_WIDTH << "x" << SCREEN_HEIGHT << std::endl;
 
-    if (const char* db_file = SDL_getenv("SDL_GAMECONTROLLERCONFIG_FILE")) {
+    if (const char* db_file = SDL_getenv("SDL_GAMECONTROLLERCONFIG_FILE"))
+    {
         SDL_GameControllerAddMappingsFromFile(db_file);
         std::cout << "Load SDL game controllers mapping file: " << db_file << std::endl;
     }
@@ -185,10 +188,10 @@ int main(int argc, char **argv)
     std::cout << "SDL initialized" << std::endl;
 
     // Surfaces
-    SDL_Window *sdlWindow;
-    SDL_Renderer *sdlRenderer;
+    SDL_Window* sdlWindow;
+    SDL_Renderer* sdlRenderer;
     SDL_CreateWindowAndRenderer(SCREEN_WIDTH, SCREEN_HEIGHT, 0, &sdlWindow, &sdlRenderer);
-    SDL_Surface *screen = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
+    SDL_Surface* screen = SDL_CreateRGBSurfaceWithFormat(0, SCREEN_WIDTH, SCREEN_HEIGHT, 32, SDL_PIXELFORMAT_ARGB8888);
     auto sdlTexture = SDL_CreateTexture(sdlRenderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, SCREEN_WIDTH, SCREEN_HEIGHT);
     set_render_surface_format(screen->format);
 
@@ -250,9 +253,7 @@ int main(int argc, char **argv)
     TaskQueue task_queue;
     ViewStack view_stack;
 
-    std::optional<std::filesystem::path> requested_book_path = (
-        argc == 2 ? std::optional<std::filesystem::path>(argv[1]) : std::nullopt
-    );
+    std::optional<std::filesystem::path> requested_book_path = (argc == 2 ? std::optional<std::filesystem::path>(argv[1]) : std::nullopt);
     initialize_views(
         view_stack,
         state_store,
@@ -281,7 +282,7 @@ int main(int argc, char **argv)
             SW_BTN_L1,
             SW_BTN_R1,
             SW_BTN_L2,
-            SW_BTN_R2
+            SW_BTN_R2,
         }
     );
     SystemKeyChordTracker chord_tracker;
@@ -322,34 +323,34 @@ int main(int argc, char **argv)
                     break;
 #ifdef USE_KEYBOARD
                 case SDL_KEYDOWN:
+                {
+                    idle_timer.reset();
+
+                    SW_BTN_TYPE key = chord_tracker.on_keypress(event.key.keysym.scancode);
+
+                    held_key_tracker.on_keypress(key);
+                    view_stack.on_keypress(key);
+
+                    if (key == SW_BTN_POWER)
                     {
-                        idle_timer.reset();
-
-                        SW_BTN_TYPE key = chord_tracker.on_keypress(event.key.keysym.scancode);
-
-                        held_key_tracker.on_keypress(key);
-                        view_stack.on_keypress(key);
-
-                        if (key == SW_BTN_POWER)
-                        {
-                            state_store.flush();
-                        }
-                        else if (key == SW_BTN_X)
-                        {
-                            if (view_stack.top_view() != settings_view)
-                            {
-                                settings_view->unterminate();
-                                view_stack.push(settings_view);
-                            }
-                            else
-                            {
-                                settings_view->terminate();
-                            }
-                        }
-
-                        ran_user_code = true;
+                        state_store.flush();
                     }
-                    break;
+                    else if (key == SW_BTN_X)
+                    {
+                        if (view_stack.top_view() != settings_view)
+                        {
+                            settings_view->unterminate();
+                            view_stack.push(settings_view);
+                        }
+                        else
+                        {
+                            settings_view->terminate();
+                        }
+                    }
+
+                    ran_user_code = true;
+                }
+                break;
                 case SDL_KEYUP:
                     chord_tracker.on_keyrelease(event.key.keysym.scancode);
                     held_key_tracker.on_keyrelease(event.key.keysym.scancode);
@@ -359,42 +360,43 @@ int main(int argc, char **argv)
                     SDL_GameControllerOpen(event.cdevice.which);
                     break;
                 case SDL_CONTROLLERDEVICEREMOVED:
-                    if (SDL_GameController* controller = SDL_GameControllerFromInstanceID(event.cdevice.which)) {
+                    if (SDL_GameController* controller = SDL_GameControllerFromInstanceID(event.cdevice.which))
+                    {
                         SDL_GameControllerClose(controller);
                     }
                     break;
                 case SDL_CONTROLLERBUTTONDOWN:
+                {
+                    idle_timer.reset();
+
+                    SW_BTN_TYPE key = chord_tracker.on_keypress((SW_BTN_TYPE)event.cbutton.button);
+
+                    held_key_tracker.on_keypress(key);
+                    view_stack.on_keypress(key);
+
+                    if (key == SW_BTN_X)
                     {
-                        idle_timer.reset();
-
-                        SW_BTN_TYPE key = chord_tracker.on_keypress((SW_BTN_TYPE)event.cbutton.button);
-
-                        held_key_tracker.on_keypress(key);
-                        view_stack.on_keypress(key);
-
-                        if (key == SW_BTN_X)
+                        if (view_stack.top_view() != settings_view)
                         {
-                            if (view_stack.top_view() != settings_view)
-                            {
-                                settings_view->unterminate();
-                                view_stack.push(settings_view);
-                            }
-                            else
-                            {
-                                settings_view->terminate();
-                            }
+                            settings_view->unterminate();
+                            view_stack.push(settings_view);
                         }
+                        else
+                        {
+                            settings_view->terminate();
+                        }
+                    }
 
-                        ran_user_code = true;
-                    }
-                    break;
+                    ran_user_code = true;
+                }
+                break;
                 case SDL_CONTROLLERBUTTONUP:
-                    {
-                        SW_BTN_TYPE key = (SW_BTN_TYPE)event.cbutton.button;
-                        chord_tracker.on_keyrelease(key);
-                        held_key_tracker.on_keyrelease(key);
-                    }
-                    break;
+                {
+                    SW_BTN_TYPE key = (SW_BTN_TYPE)event.cbutton.button;
+                    chord_tracker.on_keyrelease(key);
+                    held_key_tracker.on_keyrelease(key);
+                }
+                break;
                 case SDL_KEYDOWN:
                     if (event.key.keysym.scancode == SW_BTN_POWER)
                     {

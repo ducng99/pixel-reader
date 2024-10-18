@@ -3,16 +3,18 @@
 
 #include "reader/color_theme.h"
 
+#include <SDL2/SDL_ttf.h>
 #include <functional>
 #include <memory>
 #include <string>
-#include <SDL2/SDL_ttf.h>
 
 struct SystemStylingState;
 
-class SystemStyling {
-public:
-    enum class ChangeId {
+class SystemStyling
+{
+  public:
+    enum class ChangeId
+    {
         FONT_NAME,
         FONT_SIZE,
         LINE_PADDING,
@@ -20,11 +22,11 @@ public:
         SHOULDER_KEYMAP,
     };
 
-private:
+  private:
     std::unique_ptr<SystemStylingState> state;
     void notify_subscribers(ChangeId) const;
 
-public:
+  public:
     SystemStyling(
         const std::string &font_name,
         uint32_t font_size,
@@ -37,7 +39,7 @@ public:
     // Font
     void set_font_name(std::string font_name);
     const std::string &get_font_name() const;
-    TTF_Font *get_loaded_font() const;
+    TTF_Font* get_loaded_font() const;
 
     // Font size
     void set_font_size(uint32_t font_size);

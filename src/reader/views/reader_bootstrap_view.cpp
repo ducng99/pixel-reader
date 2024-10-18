@@ -29,12 +29,12 @@ struct ReaderBootstrapViewState
         TokenViewStyling &token_view_styling,
         ViewStack &view_stack,
         StateStore &state_store
-    ) :
-        book_path(book_path),
-        sys_styling(sys_styling),
-        token_view_styling(token_view_styling),
-        view_stack(view_stack),
-        state_store(state_store)
+    )
+        : book_path(book_path),
+          sys_styling(sys_styling),
+          token_view_styling(token_view_styling),
+          view_stack(view_stack),
+          state_store(state_store)
     {
     }
 };
@@ -84,17 +84,18 @@ ReaderBootstrapView::ReaderBootstrapView(
     ViewStack &view_stack,
     StateStore &state_store,
     std::function<void(std::function<void()>)> async
-) : state(std::make_unique<ReaderBootstrapViewState>(book_path, sys_styling, token_view_styling, view_stack, state_store))
+)
+    : state(std::make_unique<ReaderBootstrapViewState>(book_path, sys_styling, token_view_styling, view_stack, state_store))
 {
     // Perform asynchronously so that rendering can continue
-    async([this](){ load_reader(); });
+    async([this]() { load_reader(); });
 }
 
 ReaderBootstrapView::~ReaderBootstrapView()
 {
 }
 
-bool ReaderBootstrapView::render(SDL_Surface *dest_surface, bool force_render)
+bool ReaderBootstrapView::render(SDL_Surface* dest_surface, bool force_render)
 {
     bool perform_render = force_render || state->needs_render;
     if (perform_render)

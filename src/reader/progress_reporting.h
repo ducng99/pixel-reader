@@ -4,7 +4,8 @@
 #include <optional>
 #include <string>
 
-enum class ProgressReporting {
+enum class ProgressReporting
+{
     CHAPTER_PERCENT,
     GLOBAL_PERCENT
 };

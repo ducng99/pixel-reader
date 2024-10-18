@@ -6,7 +6,8 @@
 
 #include <unordered_map>
 
-struct SystemStylingState {
+struct SystemStylingState
+{
     std::string font_name;
     uint32_t font_size;
     uint32_t line_padding;
@@ -25,12 +26,13 @@ struct SystemStylingState {
         uint32_t line_padding,
         const std::string &color_theme,
         const std::string &shoulder_keymap
-    ) : font_name(font_name),
-        font_size(font_size),
-        line_padding(line_padding),
-        color_theme(color_theme),
-        loaded_color_theme(get_color_theme(color_theme)),
-        shoulder_keymap(shoulder_keymap)
+    )
+        : font_name(font_name),
+          font_size(font_size),
+          line_padding(line_padding),
+          color_theme(color_theme),
+          loaded_color_theme(get_color_theme(color_theme)),
+          shoulder_keymap(shoulder_keymap)
     {}
 };
 
@@ -45,7 +47,7 @@ SystemStyling::~SystemStyling()
 
 void SystemStyling::notify_subscribers(ChangeId id) const
 {
-    for (auto &sub: state->subscribers)
+    for (auto &sub : state->subscribers)
     {
         sub.second(id);
     }
@@ -53,7 +55,8 @@ void SystemStyling::notify_subscribers(ChangeId id) const
 
 void SystemStyling::set_font_name(std::string font_name)
 {
-    if (state->font_name != font_name) {
+    if (state->font_name != font_name)
+    {
         state->font_name = font_name;
         notify_subscribers(ChangeId::FONT_NAME);
     }
@@ -64,7 +67,7 @@ const std::string &SystemStyling::get_font_name() const
     return state->font_name;
 }
 
-TTF_Font *SystemStyling::get_loaded_font() const
+TTF_Font* SystemStyling::get_loaded_font() const
 {
     return cached_load_font(state->font_name, state->font_size);
 }

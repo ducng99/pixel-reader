@@ -15,13 +15,13 @@ struct StateStore;
 #include <memory>
 
 // Temporary view to open a book and display loading/error message
-class ReaderBootstrapView: public View
+class ReaderBootstrapView : public View
 {
     std::unique_ptr<ReaderBootstrapViewState> state;
 
     void load_reader();
 
-public:
+  public:
     ReaderBootstrapView(
         std::filesystem::path book_path,
         SystemStyling &sys_styling,
@@ -32,7 +32,7 @@ public:
     );
     virtual ~ReaderBootstrapView();
 
-    bool render(SDL_Surface *dest_surface, bool force_render) override;
+    bool render(SDL_Surface* dest_surface, bool force_render) override;
     bool is_done() override;
     void on_keypress(SW_BTN_TYPE) override;
 };

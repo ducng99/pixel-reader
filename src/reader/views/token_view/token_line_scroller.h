@@ -19,7 +19,7 @@ class TokenLineScroller
     const std::shared_ptr<DocReader> reader;
     std::shared_ptr<TokenIter> forward_it;
     std::shared_ptr<TokenIter> backward_it;
-    std::function<bool(const char *, uint32_t)> line_fits;
+    std::function<bool(const char*, uint32_t)> line_fits;
 
     std::optional<int> global_first_line;
     std::optional<int> global_end_line;
@@ -39,15 +39,15 @@ class TokenLineScroller
     void initialize_buffer_at(DocAddr address);
     void materialize_line(int line_num);
 
-public:
+  public:
     TokenLineScroller(
         const std::shared_ptr<DocReader> reader,
         DocAddr address,
-        std::function<bool(const char *, uint32_t)> line_fits,
+        std::function<bool(const char*, uint32_t)> line_fits,
         uint32_t line_height_pixels
     );
 
-    const DisplayLine *get_line_relative(int offset);
+    const DisplayLine* get_line_relative(int offset);
     int get_line_number() const;
     void seek_lines_relative(int offset);
     void seek_to_address(DocAddr address);
@@ -57,7 +57,7 @@ public:
     std::optional<int> first_line_number() const;
     std::optional<int> end_line_number() const;
 
-    SDL_Surface *load_scaled_image(const std::filesystem::path &path);
+    SDL_Surface* load_scaled_image(const std::filesystem::path &path);
 };
 
 #endif

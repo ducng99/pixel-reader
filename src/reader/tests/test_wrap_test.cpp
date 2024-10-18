@@ -2,18 +2,18 @@
 
 #include <gtest/gtest.h>
 
-static bool fits_on_line_by_char(const char *, int strlen)
+static bool fits_on_line_by_char(const char*, int strlen)
 {
     return strlen <= 12;
 }
 
-static std::vector<std::string> default_invocation(const char *str, unsigned int max_search=100)
+static std::vector<std::string> default_invocation(const char* str, unsigned int max_search = 100)
 {
     std::vector<std::string> lines;
     wrap_lines(
         str,
         fits_on_line_by_char,
-        [&lines](const char *str, uint32_t len) {
+        [&lines](const char* str, uint32_t len) {
             lines.emplace_back(str, len);
         },
         max_search
@@ -28,7 +28,6 @@ TEST(TEXT_WRAP, empty_string)
         (std::vector<std::string>{""})
     );
 }
-
 
 TEST(TEXT_WRAP, pass_whitespace)
 {

@@ -37,12 +37,14 @@ struct ReaderViewState
           token_view_styling(token_view_styling),
           token_view_styling_sub_id(token_view_styling_sub_id),
           view_stack(view_stack),
-          token_view(std::make_unique<TokenView>(
-              reader,
-              seek_address,
-              sys_styling,
-              token_view_styling
-          ))
+          token_view(
+              std::make_unique<TokenView>(
+                  reader,
+                  seek_address,
+                  sys_styling,
+                  token_view_styling
+              )
+          )
     {
     }
 
@@ -74,7 +76,7 @@ void open_toc_menu(ReaderView &reader_view, ReaderViewState &state)
 
     // setup toc entries & callbacks
     std::vector<std::string> menu_names;
-    for (const auto &toc_item: toc)
+    for (const auto &toc_item : toc)
     {
         std::string indent(toc_item.indent_level * 2, ' ');
         menu_names.push_back(indent + toc_item.display_name);
@@ -85,7 +87,7 @@ void open_toc_menu(ReaderView &reader_view, ReaderViewState &state)
         menu_names,
         state.sys_styling
     );
-    toc_select_menu->set_on_selection([&reader_view, last_toc_index=current_toc_index](uint32_t toc_index) {
+    toc_select_menu->set_on_selection([&reader_view, last_toc_index = current_toc_index](uint32_t toc_index) {
         if (toc_index != last_toc_index)
         {
             reader_view.seek_to_toc_index(toc_index);
@@ -118,17 +120,20 @@ ReaderView::ReaderView(
     SystemStyling &sys_styling,
     TokenViewStyling &token_view_styling,
     ViewStack &view_stack
-) : state(std::make_unique<ReaderViewState>(
-        path,
-        seek_address,
-        reader,
-        sys_styling,
-        token_view_styling,
-        token_view_styling.subscribe_to_changes([this]() {
-            update_token_view_title(get_current_address(*state));
-        }),
-        view_stack
-    ))
+)
+    : state(
+          std::make_unique<ReaderViewState>(
+              path,
+              seek_address,
+              reader,
+              sys_styling,
+              token_view_styling,
+              token_view_styling.subscribe_to_changes([this]() {
+                  update_token_view_title(get_current_address(*state));
+              }),
+              view_stack
+          )
+      )
 {
     update_token_view_title(seek_address);
 
@@ -164,15 +169,15 @@ void ReaderView::update_token_view_title(DocAddr address)
         state->token_view->set_title(state->filename);
     }
 
-    uint32_t progress_percent = (
-        state->token_view_styling.get_progress_reporting() == ProgressReporting::CHAPTER_PERCENT ?
-        toc_position.progress_percent :
-        state->reader->get_global_progress_percent(address)
-    );
+    uint32_t progress_percent =
+        (state->token_view_styling.get_progress_reporting() == ProgressReporting::CHAPTER_PERCENT
+             ? toc_position.progress_percent
+             : state->reader->get_global_progress_percent(address)
+        );
     state->token_view->set_title_progress(progress_percent);
 }
 
-bool ReaderView::render(SDL_Surface *dest_surface, bool force_render)
+bool ReaderView::render(SDL_Surface* dest_surface, bool force_render)
 {
     return state->token_view->render(dest_surface, force_render);
 }
@@ -190,7 +195,8 @@ void ReaderView::on_keypress(SW_BTN_TYPE key)
         return;
     }
 
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_A:
             state->token_view_styling.set_show_title_bar(
                 !state->token_view_styling.get_show_title_bar()

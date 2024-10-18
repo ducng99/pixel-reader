@@ -7,9 +7,9 @@
 namespace
 {
 
-constexpr const char *ACTIVITY_KEY_BROWSER_PATH = "browser_path";
-constexpr const char *ACTIVITY_KEY_BOOK_PATH = "book_path";
-constexpr const char *ADDRESS_KEY = "address";
+constexpr const char* ACTIVITY_KEY_BROWSER_PATH = "browser_path";
+constexpr const char* ACTIVITY_KEY_BOOK_PATH = "book_path";
+constexpr const char* ADDRESS_KEY = "address";
 
 /////////////////////////////////////
 // Activity Store

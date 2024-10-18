@@ -4,21 +4,22 @@
 #include "./token_view_styling.h"
 
 #include "doc_api/doc_reader.h"
-#include "reader/system_styling.h"
 #include "reader/shoulder_keymap.h"
+#include "reader/system_styling.h"
 #include "sys/keymap.h"
 #include "sys/screen.h"
 #include "util/sdl_utils.h"
 #include "util/throttled.h"
 
 #include <stdexcept>
-namespace {
+namespace
+{
 
-bool line_fits_on_screen(TTF_Font *font, int avail_width, const char *s, uint32_t len)
+bool line_fits_on_screen(TTF_Font* font, int avail_width, const char* s, uint32_t len)
 {
     int w = avail_width, h;
 
-    char *mut_s = (char*)s;
+    char* mut_s = (char*)s;
     char replaced = mut_s[len];
     mut_s[len] = 0;
 
@@ -28,7 +29,7 @@ bool line_fits_on_screen(TTF_Font *font, int avail_width, const char *s, uint32_
     return w <= avail_width;
 }
 
-}  // namespace
+} // namespace
 
 struct TokenViewState
 {
@@ -37,7 +38,7 @@ struct TokenViewState
     const uint32_t sys_styling_sub_id;
     const uint32_t token_view_styling_sub_id;
 
-    TTF_Font *current_font = nullptr;
+    TTF_Font* current_font = nullptr;
 
     int line_height;
 
@@ -88,7 +89,7 @@ struct TokenViewState
                   current_font = this->sys_styling.get_loaded_font();
                   line_height = detect_line_height(current_font) + this->sys_styling.get_line_padding();
                   line_scroller.set_line_height_pixels(line_height);
-                  line_scroller.reset_buffer();  // need to re-wrap lines if font-size changed
+                  line_scroller.reset_buffer(); // need to re-wrap lines if font-size changed
               }
               needs_render = true;
           })),
@@ -100,7 +101,7 @@ struct TokenViewState
           line_scroller(
               reader,
               address,
-              [this](const char *s, uint32_t len) {
+              [this](const char* s, uint32_t len) {
                   return line_fits_on_screen(
                       current_font,
                       SCREEN_WIDTH - this->sys_styling.get_line_padding() * 2,
@@ -131,7 +132,7 @@ TokenView::~TokenView()
 {
 }
 
-bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
+bool TokenView::render(SDL_Surface* dest_surface, bool force_render)
 {
     if (!state->needs_render && !force_render)
     {
@@ -139,9 +140,9 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
     }
     state->needs_render = false;
 
-    scroll(0);  // Will adjust scroll position if necessary for end of book
+    scroll(0); // Will adjust scroll position if necessary for end of book
 
-    TTF_Font *font = state->current_font;
+    TTF_Font* font = state->current_font;
     const auto &theme = state->sys_styling.get_loaded_color_theme();
     const int line_height = state->line_height;
     const int line_padding = state->sys_styling.get_line_padding();
@@ -164,16 +165,16 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
 
     for (int i = 0; i < num_text_display_lines; ++i)
     {
-        const DisplayLine *line = state->line_scroller.get_line_relative(i);
+        const DisplayLine* line = state->line_scroller.get_line_relative(i);
         if (line)
         {
             if (line->type == DisplayLine::Type::Text)
             {
-                const auto *text_line = static_cast<const TextLine *>(line);
-                const char *s = text_line->text.c_str();
-                auto surface = surface_unique_ptr { TTF_RenderUTF8_Shaded(font, s, theme.main_text, theme.background) };
+                const auto* text_line = static_cast<const TextLine*>(line);
+                const char* s = text_line->text.c_str();
+                auto surface = surface_unique_ptr{TTF_RenderUTF8_Shaded(font, s, theme.main_text, theme.background)};
                 SDL_Rect dest_rect = {
-                    static_cast<Sint16>(line_padding + (text_line->centered ? (SCREEN_WIDTH - 2 * line_padding - surface->w) /2 : 0)),
+                    static_cast<Sint16>(line_padding + (text_line->centered ? (SCREEN_WIDTH - 2 * line_padding - surface->w) / 2 : 0)),
                     static_cast<Sint16>(line_y + line_padding / 2),
                     0, 0
                 };
@@ -181,30 +182,30 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
             }
             else if (line->type == DisplayLine::Type::Image || (line->type == DisplayLine::Type::ImageRef && i == 0))
             {
-                const ImageLine *image_line = nullptr;
+                const ImageLine* image_line = nullptr;
                 uint32_t line_offset = 0;
 
                 if (line->type == DisplayLine::Type::ImageRef)
                 {
-                    line_offset = static_cast<const ImageRefLine *>(line)->offset;
-                    const DisplayLine *ref_line = state->line_scroller.get_line_relative(i - line_offset);
+                    line_offset = static_cast<const ImageRefLine*>(line)->offset;
+                    const DisplayLine* ref_line = state->line_scroller.get_line_relative(i - line_offset);
                     if (ref_line)
                     {
                         if (ref_line->type != DisplayLine::Type::Image)
                         {
                             throw std::runtime_error("ImageRefLine points to non image");
                         }
-                        image_line = static_cast<const ImageLine *>(ref_line);
+                        image_line = static_cast<const ImageLine*>(ref_line);
                     }
                 }
                 else
                 {
-                    image_line = static_cast<const ImageLine *>(line);
+                    image_line = static_cast<const ImageLine*>(line);
                 }
 
                 if (image_line)
                 {
-                    auto *surface = state->line_scroller.load_scaled_image(image_line->image_path);
+                    auto* surface = state->line_scroller.load_scaled_image(image_line->image_path);
 
                     // Amount of line height not used by image
                     uint32_t img_excess_y = image_line->num_lines * line_height - image_line->height;
@@ -259,7 +260,7 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
             char percent_str[32];
             snprintf(percent_str, sizeof(percent_str), " %d%%", state->title_progress_percent);
 
-            SDL_Surface *page_surface = TTF_RenderUTF8_Shaded(font, percent_str, theme.secondary_text, theme.background);
+            SDL_Surface* page_surface = TTF_RenderUTF8_Shaded(font, percent_str, theme.secondary_text, theme.background);
 
             SDL_Rect dest_rect = {
                 static_cast<Sint16>(SCREEN_WIDTH - page_surface->w - line_padding),
@@ -280,7 +281,7 @@ bool TokenView::render(SDL_Surface *dest_surface, bool force_render)
                 static_cast<Sint16>(line_y + line_padding / 2),
                 0, 0
             };
-            SDL_Surface *surface = TTF_RenderUTF8_Shaded(font, state->title.c_str(), theme.secondary_text, theme.background);
+            SDL_Surface* surface = TTF_RenderUTF8_Shaded(font, state->title.c_str(), theme.secondary_text, theme.background);
             SDL_BlitSurface(surface, &title_crop_rect, dest_surface, &dest_rect);
             SDL_FreeSurface(surface);
         }
@@ -342,7 +343,8 @@ void TokenView::scroll(int num_lines)
 
 void TokenView::on_keypress(SW_BTN_TYPE key)
 {
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_UP:
             scroll(-1);
             break;
@@ -353,20 +355,20 @@ void TokenView::on_keypress(SW_BTN_TYPE key)
         case SW_BTN_R1:
         case SW_BTN_L2:
         case SW_BTN_R2:
-            {
-                auto [l_key, r_key] = get_shoulder_keymap_lr(
-                    state->sys_styling.get_shoulder_keymap()
-                );
+        {
+            auto [l_key, r_key] = get_shoulder_keymap_lr(
+                state->sys_styling.get_shoulder_keymap()
+            );
 
-                if (key == l_key)
-                {
-                    key = SW_BTN_LEFT;
-                }
-                else if (key == r_key)
-                {
-                    key = SW_BTN_RIGHT;
-                }
+            if (key == l_key)
+            {
+                key = SW_BTN_LEFT;
             }
+            else if (key == r_key)
+            {
+                key = SW_BTN_RIGHT;
+            }
+        }
             // fallthrough
         case SW_BTN_LEFT:
         case SW_BTN_RIGHT:
@@ -386,7 +388,8 @@ void TokenView::on_keypress(SW_BTN_TYPE key)
 
 void TokenView::on_keyheld(SW_BTN_TYPE key, uint32_t held_time_ms)
 {
-    switch (key) {
+    switch (key)
+    {
         case SW_BTN_UP:
         case SW_BTN_DOWN:
             if (state->line_scroll_throttle(held_time_ms))
@@ -417,7 +420,7 @@ bool TokenView::is_done()
 
 DocAddr TokenView::get_address() const
 {
-    const DisplayLine *line = state->line_scroller.get_line_relative(0);
+    const DisplayLine* line = state->line_scroller.get_line_relative(0);
     if (line)
     {
         return line->address;
